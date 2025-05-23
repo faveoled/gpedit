@@ -5,8 +5,8 @@ This is needed in oder not to block the editor when the script is running.
 '''
 
 import os
-from subprocess import Popen, PIPE, STDOUT, TimeoutExpired # Added TimeoutExpired
-from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
+from subprocess import Popen, PIPE, STDOUT, TimeoutExpired
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot 
 from threading import Event
 import traceback
 try:
@@ -21,6 +21,8 @@ class GnuplotInterface(QThread):
   mousePicked=pyqtSignal(float, float)
   lineExecuted=pyqtSignal(bool, str, int)
   lineSend=pyqtSignal(str, int)
+  processCrashed = pyqtSignal() 
+
   TERMINALS={
            'order': ['windows', 'qt', 'wxt', 'x11', 'aqua'],
            'windows': 'set term wxt %(n)i %(enhanced)s %(size)s %(font)s %(close)s %(title)s noraise',
@@ -34,6 +36,7 @@ class GnuplotInterface(QThread):
   def __init__(self, parent):
     QThread.__init__(self)
     self.parent=parent
+    self.gp = None # Initialize self.gp here
     self.script=[]
     self.scriptIdle=Event()
     self.scriptIdle.set()
@@ -47,52 +50,231 @@ class GnuplotInterface(QThread):
     while not self.shutdown.isSet():
       try:
         self._run()
-      except IOError:
-        self.initGnuplot()
-      except:
+      except IOError: # This can happen if gnuplot process dies or _write fails
+        print("IOError in GnuplotInterface run loop, re-initializing Gnuplot.")
+        # initGnuplot might raise RuntimeError if it can't start gnuplot
+        try:
+            self.initGnuplot()
+        except RuntimeError as e_init:
+            print(f"Fatal error during Gnuplot re-initialization: {e_init}. Thread might stop if not recoverable.")
+            # If initGnuplot fails critically (e.g., gnuplot not found), emit crash and maybe stop thread.
+            self.processCrashed.emit() # Ensure UI knows
+            self.shutdown.set() # Signal thread to stop if Gnuplot cannot be re-initialized
+            break # Exit run loop
+      except RuntimeError as e: # Catch RuntimeError from executeLine/pickPosition/initGnuplot
+        if 'Gnuplot terminated' in str(e) or 'Gnuplot could not be started' in str(e) or 'Gnuplot EOF' in str(e) or 'Gnuplot stdout read error' in str(e) or 'Failed Gnuplot initialization' in str(e):
+            print(f"RuntimeError caught in run loop: {e}. Gnuplot (re-)initialization will be attempted or has occurred.")
+            # If error is from initGnuplot itself (e.g. could not start), it might have emitted processCrashed.
+            # If from executeLine/pickPosition, they emit processCrashed and then raise RuntimeError, leading here.
+            # The goal here is to ensure initGnuplot is called if a recoverable runtime error occurs.
+            if "Gnuplot could not be started" not in str(e) and "Failed Gnuplot initialization" not in str(e) : # If it's not a startup error, try re-init.
+                try:
+                    self.initGnuplot()
+                except RuntimeError as e_reinit:
+                    print(f"Fatal error during Gnuplot re-initialization from run loop: {e_reinit}")
+                    self.processCrashed.emit()
+                    self.shutdown.set() # Stop thread if re-init fails
+                    break
+            else: # Gnuplot could not be started or init failed, already handled by initGnuplot, stop thread.
+                self.shutdown.set() # Ensure thread stops
+                break
+
+        else: # Other unexpected RuntimeErrors
+            traceback.print_exc() 
+            try:
+                self.initGnuplot() 
+            except RuntimeError as e_reinit_other:
+                print(f"Fatal error during Gnuplot re-initialization for other RuntimeError: {e_reinit_other}")
+                self.processCrashed.emit()
+                self.shutdown.set()
+                break
+      except Exception: # Catch all other exceptions
         traceback.print_exc()
-  
+        print("Unexpected exception in GnuplotInterface run loop, attempting re-initialization.")
+        try:
+            self.initGnuplot()
+        except RuntimeError as e_reinit_exc:
+            print(f"Fatal error during Gnuplot re-initialization for general exception: {e_reinit_exc}")
+            self.processCrashed.emit()
+            self.shutdown.set()
+            break
+    print("GnuplotInterface run loop ended.")
+
+
   def _run(self):
+    # This inner loop runs as long as the thread is not shut down.
+    # It waits for script commands or shutdown signals.
     while not self.shutdown.isSet():
-      if len(self.script)>0:
-        self.scriptIdle.clear()
-        self.executeLine()
-      else:
-        self.scriptIdle.set()
-        self.shutdown.wait(0.1)
+      if self.script: # If there are commands in the queue
+        self.scriptIdle.clear() # Mark as not idle
+        self.executeLine() # Execute the next command
+      else: # No commands in the queue
+        if not self.scriptIdle.is_set():
+            self.scriptIdle.set() # Mark as idle
+        # Wait for a short period or until shutdown is signaled.
+        # This allows the thread to be responsive to new commands or shutdown requests.
+        self.shutdown.wait(0.05) # 50ms wait, adjust as needed for responsiveness
+
 
   def initGnuplot(self):
+    # --- Start of new cleanup block for existing self.gp ---
+    if hasattr(self, 'gp') and self.gp is not None:
+        print("Cleaning up existing Gnuplot process before re-initialization...")
+        if self.gp.poll() is None:  # Process is running
+            try:
+                if hasattr(self.gp, 'stdin') and self.gp.stdin and not self.gp.stdin.closed:
+                    self.gp.stdin.close()
+            except (IOError, AttributeError) as e:
+                print(f"Error closing stdin of old Gnuplot process: {e}")
+
+            self.gp.terminate()
+            try:
+                self.gp.wait(timeout=0.5)
+            except TimeoutExpired:
+                print("Old Gnuplot process did not terminate in time, killing...")
+                self.gp.kill()
+                try:
+                    self.gp.wait(timeout=0.5)
+                except TimeoutExpired:
+                    print("Old Gnuplot process did not die after kill. May be orphaned.")
+                except Exception as e: # pylint: disable=broad-except
+                    print(f"Exception waiting for old Gnuplot to die after kill: {e}")
+            except Exception as e: # pylint: disable=broad-except
+                print(f"Exception waiting for old Gnuplot to terminate: {e}")
+        
+        # Try to close stdout/stderr streams if they exist and are open
+        for stream_name in ['stdout', 'stderr']:
+            if hasattr(self.gp, stream_name):
+                stream = getattr(self.gp, stream_name)
+                if stream and hasattr(stream, 'closed') and not stream.closed: # Check if stream obj exists and has 'closed' attr
+                    try:
+                        stream.close()
+                    except (IOError, AttributeError) as e: # AttributeError for None or missing 'closed'
+                        print(f"Error closing {stream_name} of old Gnuplot process: {e}")
+        self.gp = None
+    # --- End of new cleanup block ---
+
     self.term_options=dict(self.parent._default_term_options)
     extra_opts={"bufsize": 0}
-    gp_executable='gnuplot'
-    if win32process is not None:
+    gp_executable='gnuplot' # Default, rely on PATH
+
+    # Platform-specific executable path finding
+    if win32process is not None: # Windows
       extra_opts['creationflags']=win32process.CREATE_NO_WINDOW
-      gp_executable=os.path.join(os.path.dirname(__file__), '..', 'gnuplot', 'gnuplot.exe')
-    try: # if gnuplot is not in path, try typical folders (py2app doesn't work otherwise)
+      module_dir = os.path.dirname(__file__) 
+      gp_bundled_path = os.path.join(module_dir, '..', 'gnuplot', 'bin', 'gnuplot.exe')
+      # A bit more robust relative path: assuming this file is in 'gpedit' dir, 
+      # and 'gnuplot' is parallel to 'gpedit's parent.
+      # (e.g. <any_root>/something/gpedit/this_file.py and <any_root>/gnuplot/bin/gnuplot.exe)
+      # More likely: gpedit is a package, and gnuplot is bundled relative to the application root.
+      # For now, this path is a guess. A better way is to configure it or use common install paths.
+      # gp_candidate_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'gnuplot', 'bin', 'gnuplot.exe'))
+
+      if os.path.exists(gp_bundled_path): # Check if the specific bundled path exists
+          gp_executable = gp_bundled_path
+          print(f"Using specific Gnuplot for Windows: {gp_executable}")
+      else:
+          print(f"Specific Gnuplot for Windows not found at {gp_bundled_path}, relying on PATH for 'gnuplot'.")
+          # gp_executable remains 'gnuplot'
+    
+    # Attempt to start Gnuplot
+    try: 
+      print(f"Attempting to start Gnuplot with: '{gp_executable}'")
       self.gp=Popen(gp_executable, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
-    except OSError:
-      try:
-        self.gp=Popen('/usr/bin/gnuplot', stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
-      except OSError:
-        self.gp=Popen('/usr/local/bin/gnuplot', stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
-    # get available terminals
-    self._write('print GPVAL_TERMINALS\n')
-    self._write('print "====Command End===="\n')
-    outstr=''
-    while not outstr.endswith('====Command End===='):
-      outstr+=str(self.gp.stdout.read(1), 'ascii', 'replace')
-    outstr=outstr.split('====Command End====')[0].strip()
-    terms=outstr.split()
-    for term in self.TERMINALS['order']:
-      if term in terms:
-        self.parent.preview_term=self.TERMINALS[term]
-        break
-    self.write(self.parent.preview_term%dict(list(self.parent._default_term_options.items())+
-                                        [('n', 1), ]))
+    except OSError as e_main: 
+      print(f"Failed to start Gnuplot with '{gp_executable}': {e_main}. Trying common alternatives...")
+      alternatives = ['/usr/bin/gnuplot', '/usr/local/bin/gnuplot', '/opt/local/bin/gnuplot', '/opt/homebrew/bin/gnuplot']
+      if os.name == 'nt': # Windows specific common paths if 'gnuplot' in PATH failed.
+          program_files = os.environ.get("ProgramFiles", "C:\\Program Files")
+          program_files_x86 = os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")
+          alternatives.extend([
+              os.path.join(program_files, "gnuplot", "bin", "gnuplot.exe"),
+              os.path.join(program_files_x86, "gnuplot", "bin", "gnuplot.exe"),
+          ])
+      
+      found_alternative = False
+      for alt_path in alternatives:
+          if os.path.exists(alt_path): # Check if path exists before trying
+            try:
+                print(f"Attempting alternative Gnuplot path: '{alt_path}'")
+                self.gp = Popen(alt_path, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
+                print(f"Successfully started Gnuplot with alternative: '{alt_path}'.")
+                found_alternative = True
+                break 
+            except OSError:
+                print(f"Alternative '{alt_path}' also failed.")
+          else:
+              print(f"Alternative path '{alt_path}' does not exist.")
+
+      if not found_alternative:
+          print("All attempts to start Gnuplot failed.")
+          self.gp = None # Ensure self.gp is None
+          self.processCrashed.emit() 
+          raise RuntimeError("Gnuplot could not be started. Please ensure it is installed and in your system's PATH or configured correctly.")
+
+    # Initial communication with Gnuplot to get available terminals
+    try:
+        if self.gp is None: 
+             raise IOError("Gnuplot process (self.gp) is None after Popen attempts.")
+
+        self._write('print GPVAL_TERMINALS\n')
+        self._write('print "====Command End===="\n')
+        
+        outstr_response=''
+        max_read_attempts = 300 # Increased attempts for safety, ~3s if 10ms/read
+        attempts = 0
+        while not outstr_response.endswith('====Command End===='):
+            if self.gp.poll() is not None: # Check if process died
+                raise IOError("Gnuplot terminated during init while reading GPVAL_TERMINALS.")
+            
+            if attempts > max_read_attempts: # Timeout
+                # Try to kill the process if it's stuck
+                if self.gp.poll() is None: self.gp.kill()
+                raise TimeoutError("Timeout reading GPVAL_TERMINALS from Gnuplot.")
+
+            next_char_bytes = self.gp.stdout.read(1) # This can block
+            if not next_char_bytes:  # EOF
+                # Confirm process died
+                if self.gp.poll() is not None or not self.gp.stdout.readable(): 
+                    raise IOError("Gnuplot EOF (process died) during init while reading GPVAL_TERMINALS.")
+                else: # Should not happen with blocking read(1) if process is alive and pipe open
+                    # This case is unlikely, but as a safeguard:
+                    print("Warning: Gnuplot stdout.read(1) returned EOF but process seems alive. Retrying read.")
+                    # Simple retry mechanism or short pause
+                    QThread.msleep(10) # Sleep 10ms and retry
+            else:
+                outstr_response += str(next_char_bytes, 'ascii', 'replace')
+            attempts += 1
+
+        outstr_response = outstr_response.split('====Command End====')[0].strip()
+        available_terms = outstr_response.split()
+        
+        chosen_term_type = self.TERMINALS['order'][0] 
+        for term_type in self.TERMINALS['order']:
+          if term_type in available_terms:
+            chosen_term_type = term_type
+            break
+        self.parent.preview_term = self.TERMINALS[chosen_term_type]
+        print(f"Selected preview terminal type: {chosen_term_type} -> {self.parent.preview_term}")
+        
+        init_term_opts = dict(self.parent._default_term_options) 
+        init_term_opts['n'] = 1 
+        self.write(self.parent.preview_term % init_term_opts)
+
+    except (IOError, TimeoutError, RuntimeError) as e: 
+        print(f"Error communicating with Gnuplot during initialization: {e}")
+        if self.gp and self.gp.poll() is None: 
+            self.gp.kill()
+        self.gp = None 
+        self.processCrashed.emit() 
+        raise RuntimeError(f"Failed Gnuplot initialization: {e}")
+
 
   @pyqtSlot()
   def clear(self):
-    self.scriptIdle.wait()
+    if not self.scriptIdle.is_set():
+        if not self.scriptIdle.wait(timeout=1.0): 
+            print("GnuplotInterface.clear(): Timed out waiting for script to become idle. Proceeding with clear.")
     self.write('unset output')
     self.write('reset')
 
@@ -102,129 +284,266 @@ class GnuplotInterface(QThread):
     self.script.append((line, lno))
 
   def _write(self, line):
-    self.gp.stdin.write(line.encode(self.encoding))
+    if self.gp is None or self.gp.stdin is None: 
+        print("Error: Gnuplot process or stdin is not available (gp or gp.stdin is None).")
+        self.processCrashed.emit()
+        raise IOError("Gnuplot process or stdin is None.")
+    
+    if self.gp.stdin.closed: 
+        print("Error: Gnuplot stdin is closed.")
+        if self.gp.poll() is not None: 
+            print("Gnuplot process terminated, cannot write to stdin.")
+        self.processCrashed.emit() 
+        raise IOError("Gnuplot stdin is closed.")
+
+    try:
+        self.gp.stdin.write(line.encode(self.encoding))
+        self.gp.stdin.flush() 
+    except (IOError, BrokenPipeError, AttributeError) as e: 
+        print(f"Error writing to Gnuplot stdin: {e}")
+        if self.gp.poll() is not None:
+            print("Gnuplot process appears to have terminated.")
+        self.processCrashed.emit()
+        raise IOError(f"Gnuplot stdin write error: {e}")
+
 
   @pyqtSlot()
   def stopScript(self):
-    self.shutdownScript.clear()
-    self._doShutdown = True
+    print("stopScript called.")
+    self.shutdownScript.clear() 
+    self._doShutdown = True 
 
-    if self.gp.poll() is None:  # Gnuplot process is still running
-        try:
-            if not self.gp.stdin.closed: # Check if stdin is already closed
-                self.gp.stdin.close()
-        except IOError:
-            # Stdin might already be closed or broken, which is fine.
-            pass
-        
+    if not hasattr(self, 'gp') or self.gp is None or self.gp.poll() is not None:
+        print("stopScript: Gnuplot process not running or already terminated.")
+        self.script = [] 
+        if not self.scriptIdle.is_set(): self.scriptIdle.set()
+        self._doShutdown = False 
+        self.shutdownScript.set() 
+        return
+
+    print("stopScript: Attempting to stop running Gnuplot script.")
+    # _doShutdown flag will be checked by executeLine/pickPosition's read loop.
+    # If gnuplot is stuck in a command not reading stdin (e.g. 'pause -1'),
+    # or if the read loop in executeLine is blocked on read(1) from a dead process,
+    # we might need to terminate more forcefully.
+
+    # Try to interrupt by closing stdin if it's waiting for input.
+    # This is not guaranteed to stop a gnuplot script, but it's less disruptive than terminate.
+    # if self.gp.stdin and not self.gp.stdin.closed:
+    #     try: self.gp.stdin.close()
+    #     except IOError: pass
+
+    # Give a very short time for _doShutdown to be processed by read loop
+    QThread.msleep(50) # 50ms
+
+    if self.gp.poll() is None: # If still running after _doShutdown check should have happened
+        print("stopScript: Gnuplot still running, proceeding to terminate.")
         self.gp.terminate()
         try:
-            self.gp.wait(timeout=1.0)
+            self.gp.wait(timeout=0.5) 
         except TimeoutExpired:
-            print("Gnuplot did not terminate in time, killing...")
+            print("stopScript: Gnuplot did not terminate after 0.5s, killing...")
             self.gp.kill()
             try:
                 self.gp.wait(timeout=0.5)
             except TimeoutExpired:
-                print("Gnuplot did not die after kill. Process may be orphaned.")
-            except Exception as e: # pylint: disable=broad-except
-                # Handle cases where process might have died between kill and wait
-                print(f"Exception waiting for Gnuplot to die after kill: {e}")
-        except Exception as e: # pylint: disable=broad-except
-            # Handle cases where process might have already terminated before wait
-            print(f"Exception waiting for Gnuplot to terminate: {e}")
+                print("stopScript: Gnuplot did not die after kill.")
+            except Exception: pass 
+        except Exception: pass 
+    
+    self.script = [] 
+    if not self.scriptIdle.is_set(): self.scriptIdle.set()
+    self._doShutdown = False 
+    self.shutdownScript.set() 
+    print("stopScript finished.")
 
-    self.script = []  # Clear any pending commands
-
-    if not self.scriptIdle.is_set(): # Check if scriptIdle is already set
-        self.scriptIdle.set()
-
-    self._doShutdown = False
-    self.shutdownScript.set()
 
   def executeLine(self):
-    next_item=self.script.pop(0)
-    if isinstance(next_item, str):
-      return getattr(self, '_'+next_item)()
-    else:
-      line, lno=next_item
-    if line is None:
-      if lno>0:
-        self.imagesFinished.emit(lno)
-      self.scriptFinished.emit()
-      return
-    self._write(line+'\n')
-    if lno>=0:
-      self.lineSend.emit(('[% 3i] '%lno)+line.replace('\n', '\n      ')+'\n', lno)
-    else:
-      self.lineSend.emit('gnuplot> '+line+'\n', lno)
-    self._write('print "====Command End===="\n')
-    outstr=''.encode(self.encoding) # trick to get a python3 byte string
-    while not outstr.endswith('====Command End===='.encode(self.encoding)):
-      if self.gp.poll() is not None:
-        if self._doShutdown:
-          self.script=[]
-          self.shutdownScript.set()
-          self._doShutdown=False
-          self.lineExecuted.emit(True, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot killed during script execution, restarting...',-1)
-          return
-        self.lineExecuted.emit(False, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot process has been terminated unexpectedly, restarting...', lno)
-        self.initGnuplot()
-        raise RuntimeError('Gnuplot terminated')
-      # --- Start of modification for executeLine ---
-      if self.gp.poll() is not None:
-        outstr = b''
-        break
-      # --- End of modification for executeLine ---
-      next_byte=self.gp.stdout.read(1)
-      outstr+=next_byte
-    outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
-    err='gnuplot>' in outstr
-    if lno>=0:
-      outstr=outstr.replace('line 0:', '').replace('gnuplot>', 'line %i:'%lno)
-    outstr=outstr.strip()
-    self.lineExecuted.emit(not err, outstr, lno)
+    if not self.script: 
+        if not self.scriptIdle.is_set(): self.scriptIdle.set()
+        return
 
-  def pickPosition(self):
-    self.script.append('pickPosition')
-  
-  def _pickPosition(self):
-    self._write('pause mouse\n')
-    self._write('print "x=",MOUSE_X\n')
-    self._write('print "y=",MOUSE_Y\n')
-    self._write('print "====Command End===="\n')
-    outstr=''.encode(self.encoding) # trick to get a python3 byte string
-    while not outstr.endswith('====Command End===='.encode(self.encoding)):
-      if self.gp.poll() is not None:
-        if self._doShutdown:
-          self.script=[]
-          self.shutdownScript.set()
-          self._doShutdown=False
-          self.lineExecuted.emit(True, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot killed during script execution, restarting...',-1)
-          return
-        self.lineExecuted.emit(False, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot process has been terminated unexpectedly, restarting...',-1)
-        self.initGnuplot()
-        raise RuntimeError('Gnuplot terminated')
-      # --- Start of modification for _pickPosition ---
-      if self.gp.poll() is not None:
-        outstr = b''
-        break
-      # --- End of modification for _pickPosition ---
-      next_byte=self.gp.stdout.read(1)
-      outstr+=next_byte
-    outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
+    next_item = self.script.pop(0)
+    if not self.script: 
+        if not self.scriptIdle.is_set(): self.scriptIdle.set()
+    
+    if isinstance(next_item, str):
+      try:
+          method_to_call = getattr(self, next_item)
+          method_to_call()
+      except AttributeError:
+          print(f"Error: Internal command '{next_item}' not found in GnuplotInterface.")
+          self.lineExecuted.emit(False, f"Internal error: Unknown command {next_item}", -1)
+      return 
+
+    line, lno = next_item
+
+    if line is None: 
+      if lno > 0: 
+        self.imagesFinished.emit(lno)
+      else: 
+        self.scriptFinished.emit()
+      return
+
     try:
-      x=float(outstr.split('x=')[1].splitlines()[0])
-    except ValueError:
-      x=0.
+        self._write(line+'\n')
+        if lno>=0: 
+          self.lineSend.emit(('[% 3i] '%lno)+line.replace('\n', '\n      ')+'\n', lno)
+        else: 
+          self.lineSend.emit('gnuplot> '+line+'\n', lno)
+        self._write('print "====Command End===="\n')
+    except IOError as e: 
+        print(f"executeLine: IOError during _write: {e}. Aborting line execution.")
+        if not self.script and not self.scriptIdle.is_set():
+            self.scriptIdle.set()
+        # The run() loop will catch the IOError and re-initialize.
+        # No need to emit processCrashed here as _write already does.
+        raise # Re-raise for run() to handle
+
+    outstr_bytes = b''
     try:
-      y=float(outstr.split('y=')[1].splitlines()[0])
-    except ValueError:
-      y=0.
-    err='gnuplot>' in outstr
-    self.lineExecuted.emit(not err, outstr,-1)
-    self.mousePicked.emit(x, y)
+        while not outstr_bytes.endswith(b'====Command End===='):
+            if self.gp is None or self.gp.poll() is not None: 
+                if self._doShutdown: 
+                    self._doShutdown = False 
+                    decoded_output = outstr_bytes.strip().decode(self.encoding, 'replace')
+                    self.lineExecuted.emit(True, decoded_output + '\n\nGnuplot script execution stopped by user.', -1)
+                    return 
+                
+                print("executeLine: Gnuplot terminated unexpectedly during command output reading.")
+                decoded_output = outstr_bytes.strip().decode(self.encoding, 'replace')
+                self.lineExecuted.emit(False, decoded_output + '\n\nGnuplot process terminated unexpectedly.', lno)
+                self.script = [] 
+                if not self.scriptIdle.is_set(): self.scriptIdle.set()
+                self.processCrashed.emit() 
+                raise RuntimeError('Gnuplot terminated unexpectedly while reading output in executeLine')
+
+            if self.gp.stdout is None: raise IOError("Gnuplot stdout is None during read.")
+            next_byte = self.gp.stdout.read(1) # This can block
+            if not next_byte: # EOF
+                print("executeLine: EOF reading Gnuplot stdout, process likely died.")
+                if self._doShutdown: self._doShutdown = False; return 
+                
+                # Confirm process is dead before raising critical error
+                if self.gp.poll() is None: # Process seems alive but pipe closed?
+                    QThread.msleep(20) # Short pause, check again
+                    if self.gp.poll() is None: # Still alive, this is odd for EOF on blocking read
+                         print("executeLine: EOF on stdout but process poll is None. Gnuplot might be stuck or pipe error.")
+                         # Treat as a crash anyway, as communication is broken.
+                
+                decoded_output = outstr_bytes.strip().decode(self.encoding, 'replace')
+                self.lineExecuted.emit(False, decoded_output + '\n\nGnuplot process EOF reached unexpectedly.', lno)
+                self.script = []
+                if not self.scriptIdle.is_set(): self.scriptIdle.set()
+                self.processCrashed.emit()
+                raise RuntimeError('Gnuplot EOF while reading output in executeLine')
+            outstr_bytes += next_byte
+            
+    except IOError as e: 
+        print(f"executeLine: IOError reading Gnuplot stdout: {e}")
+        if self._doShutdown: self._doShutdown=False; return 
+        self.script = []; self.processCrashed.emit()
+        if not self.scriptIdle.is_set(): self.scriptIdle.set()
+        raise RuntimeError(f'Gnuplot stdout read error: {e}') 
+    except RuntimeError: 
+        raise
+
+    outstr_decoded = outstr_bytes.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
+    err_detected = 'gnuplot>' in outstr_decoded or \
+                   '"<stdin>"' in outstr_decoded or \
+                   'line 0:' in outstr_decoded or \
+                   'error:' in outstr_decoded.lower() or \
+                   'undefined' in outstr_decoded.lower()
+
+    if lno >= 0 and err_detected:
+        if not (f"line {lno}:" in outstr_decoded or f"\"{lno}\"" in outstr_decoded):
+             outstr_decoded = f"[Script line {lno}] {outstr_decoded}"
+    
+    self.lineExecuted.emit(not err_detected, outstr_decoded.strip(), lno)
+
+
+  def _pickPosition(self): 
+    if self.gp is None or self.gp.poll() is not None:
+        print("_pickPosition: Gnuplot not running.")
+        self.lineExecuted.emit(False, "Gnuplot not running for pickPosition.", -1)
+        return
+
+    try:
+        self._write('pause mouse\n')
+        self._write('print "x=",MOUSE_X\n')
+        self._write('print "y=",MOUSE_Y\n')
+        self._write('print "====Command End===="\n')
+    except IOError as e:
+        print(f"_pickPosition: IOError during _write: {e}. Aborting pick.")
+        if not self.script and not self.scriptIdle.is_set():
+            self.scriptIdle.set()
+        raise # Re-raise for run() to handle
+
+    outstr_bytes = b''
+    try:
+        while not outstr_bytes.endswith(b'====Command End===='):
+            if self.gp.poll() is not None: 
+                if self._doShutdown: 
+                    self._doShutdown = False
+                    self.lineExecuted.emit(True, outstr_bytes.strip().decode(self.encoding, 'replace') + '\n\nPick position stopped by user.', -1)
+                    return
+                
+                print("_pickPosition: Gnuplot terminated unexpectedly.")
+                decoded_output = outstr_bytes.strip().decode(self.encoding, 'replace')
+                self.lineExecuted.emit(False, decoded_output + '\n\nGnuplot process terminated unexpectedly during pickPosition.', -1)
+                self.script = []
+                if not self.scriptIdle.is_set(): self.scriptIdle.set()
+                self.processCrashed.emit()
+                raise RuntimeError('Gnuplot terminated unexpectedly during _pickPosition read')
+
+            if self.gp.stdout is None: raise IOError("Gnuplot stdout is None during pickPosition read.")
+            next_byte = self.gp.stdout.read(1)
+            if not next_byte: # EOF
+                print("_pickPosition: EOF reading Gnuplot stdout.")
+                if self._doShutdown: self._doShutdown = False; return
+                self.script = []; self.processCrashed.emit()
+                if not self.scriptIdle.is_set(): self.scriptIdle.set()
+                raise RuntimeError('Gnuplot EOF during _pickPosition read')
+            outstr_bytes += next_byte
+    except IOError as e:
+        print(f"_pickPosition: IOError reading Gnuplot stdout: {e}")
+        if self._doShutdown: self._doShutdown=False; return
+        self.script=[]; self.processCrashed.emit()
+        if not self.scriptIdle.is_set(): self.scriptIdle.set()
+        raise RuntimeError(f'Gnuplot stdout read error during pickPosition: {e}')
+    except RuntimeError:
+        raise 
+
+    outstr_decoded = outstr_bytes.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
+    
+    x_val, y_val = 0.0, 0.0
+    err_in_output = 'gnuplot>' in outstr_decoded or \
+                    "undefined variable: MOUSE_X" in outstr_decoded or \
+                    ("MOUSE_Y" in outstr_decoded and "undefined" in outstr_decoded)
+    
+    if not err_in_output:
+        try:
+          lines_from_gp = outstr_decoded.splitlines()
+          found_x, found_y = False, False
+          for l_item in lines_from_gp:
+              if l_item.startswith('x='):
+                  x_val = float(l_item.split('x=')[1].strip())
+                  found_x = True
+              elif l_item.startswith('y='):
+                  y_val = float(l_item.split('y=')[1].strip())
+                  found_y = True
+          if not (found_x and found_y): 
+              if not ("pause mouse" in outstr_decoded and not lines_from_gp): 
+                # If 'pause mouse' is the only thing, it means user might have quit the pause (e.g. typed 'q')
+                # This is not necessarily an error, but MOUSE_X/Y won't be defined.
+                # For now, treat missing MOUSE_X/Y as an error unless it's clearly just a quit from pause.
+                if not ("pause mouse" in outstr_decoded and not any(s.startswith("x=") or s.startswith("y=") for s in lines_from_gp)):
+                    print(f"Could not parse MOUSE_X/Y. Output: {outstr_decoded}")
+                    err_in_output = True 
+        except (ValueError, IndexError) as e:
+          print(f"Error parsing MOUSE_X/Y from gnuplot: {e}\nOutput was: {outstr_decoded}")
+          err_in_output = True
+
+    self.lineExecuted.emit(not err_in_output, outstr_decoded, -1) 
+    if not err_in_output:
+        self.mousePicked.emit(x_val, y_val)
