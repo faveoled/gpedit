@@ -163,28 +163,19 @@ class GnuplotInterface(QThread):
       extra_opts['creationflags']=win32process.CREATE_NO_WINDOW
       module_dir = os.path.dirname(__file__) 
       gp_bundled_path = os.path.join(module_dir, '..', 'gnuplot', 'bin', 'gnuplot.exe')
-      # A bit more robust relative path: assuming this file is in 'gpedit' dir, 
-      # and 'gnuplot' is parallel to 'gpedit's parent.
-      # (e.g. <any_root>/something/gpedit/this_file.py and <any_root>/gnuplot/bin/gnuplot.exe)
-      # More likely: gpedit is a package, and gnuplot is bundled relative to the application root.
-      # For now, this path is a guess. A better way is to configure it or use common install paths.
-      # gp_candidate_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'gnuplot', 'bin', 'gnuplot.exe'))
-
-      if os.path.exists(gp_bundled_path): # Check if the specific bundled path exists
+      if os.path.exists(gp_bundled_path): 
           gp_executable = gp_bundled_path
           print(f"Using specific Gnuplot for Windows: {gp_executable}")
       else:
           print(f"Specific Gnuplot for Windows not found at {gp_bundled_path}, relying on PATH for 'gnuplot'.")
-          # gp_executable remains 'gnuplot'
     
-    # Attempt to start Gnuplot
     try: 
       print(f"Attempting to start Gnuplot with: '{gp_executable}'")
       self.gp=Popen(gp_executable, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
     except OSError as e_main: 
       print(f"Failed to start Gnuplot with '{gp_executable}': {e_main}. Trying common alternatives...")
       alternatives = ['/usr/bin/gnuplot', '/usr/local/bin/gnuplot', '/opt/local/bin/gnuplot', '/opt/homebrew/bin/gnuplot']
-      if os.name == 'nt': # Windows specific common paths if 'gnuplot' in PATH failed.
+      if os.name == 'nt': 
           program_files = os.environ.get("ProgramFiles", "C:\\Program Files")
           program_files_x86 = os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")
           alternatives.extend([
@@ -194,7 +185,7 @@ class GnuplotInterface(QThread):
       
       found_alternative = False
       for alt_path in alternatives:
-          if os.path.exists(alt_path): # Check if path exists before trying
+          if os.path.exists(alt_path): 
             try:
                 print(f"Attempting alternative Gnuplot path: '{alt_path}'")
                 self.gp = Popen(alt_path, stdin=PIPE, stdout=PIPE, stderr=STDOUT, **extra_opts)
@@ -208,11 +199,10 @@ class GnuplotInterface(QThread):
 
       if not found_alternative:
           print("All attempts to start Gnuplot failed.")
-          self.gp = None # Ensure self.gp is None
+          self.gp = None 
           self.processCrashed.emit() 
           raise RuntimeError("Gnuplot could not be started. Please ensure it is installed and in your system's PATH or configured correctly.")
 
-    # Initial communication with Gnuplot to get available terminals
     try:
         if self.gp is None: 
              raise IOError("Gnuplot process (self.gp) is None after Popen attempts.")
@@ -221,30 +211,28 @@ class GnuplotInterface(QThread):
         self._write('print "====Command End===="\n')
         
         outstr_response=''
-        max_read_attempts = 300 # Increased attempts for safety, ~3s if 10ms/read
-        attempts = 0
+        # --- Start of modification for GPVAL_TERMINALS read loop ---
+        max_bytes_initial_read = 2048 # Increased limit
+        bytes_received_count = 0     # Renamed counter
         while not outstr_response.endswith('====Command End===='):
-            if self.gp.poll() is not None: # Check if process died
+            if self.gp.poll() is not None: 
                 raise IOError("Gnuplot terminated during init while reading GPVAL_TERMINALS.")
             
-            if attempts > max_read_attempts: # Timeout
-                # Try to kill the process if it's stuck
+            if bytes_received_count > max_bytes_initial_read: # Condition updated
                 if self.gp.poll() is None: self.gp.kill()
-                raise TimeoutError("Timeout reading GPVAL_TERMINALS from Gnuplot.")
+                raise TimeoutError(f"Timeout reading GPVAL_TERMINALS from Gnuplot (read {bytes_received_count} bytes). Received so far: '{outstr_response}'")
 
-            next_char_bytes = self.gp.stdout.read(1) # This can block
-            if not next_char_bytes:  # EOF
-                # Confirm process died
-                if self.gp.poll() is not None or not self.gp.stdout.readable(): 
+            next_char_bytes = self.gp.stdout.read(1) 
+            if not next_char_bytes:  
+                if self.gp.poll() is not None or (hasattr(self.gp.stdout, 'readable') and not self.gp.stdout.readable()): 
                     raise IOError("Gnuplot EOF (process died) during init while reading GPVAL_TERMINALS.")
-                else: # Should not happen with blocking read(1) if process is alive and pipe open
-                    # This case is unlikely, but as a safeguard:
+                else: 
                     print("Warning: Gnuplot stdout.read(1) returned EOF but process seems alive. Retrying read.")
-                    # Simple retry mechanism or short pause
-                    QThread.msleep(10) # Sleep 10ms and retry
+                    QThread.msleep(10) 
             else:
                 outstr_response += str(next_char_bytes, 'ascii', 'replace')
-            attempts += 1
+            bytes_received_count += 1 # Counter incremented
+        # --- End of modification for GPVAL_TERMINALS read loop ---
 
         outstr_response = outstr_response.split('====Command End====')[0].strip()
         available_terms = outstr_response.split()
@@ -322,21 +310,9 @@ class GnuplotInterface(QThread):
         return
 
     print("stopScript: Attempting to stop running Gnuplot script.")
-    # _doShutdown flag will be checked by executeLine/pickPosition's read loop.
-    # If gnuplot is stuck in a command not reading stdin (e.g. 'pause -1'),
-    # or if the read loop in executeLine is blocked on read(1) from a dead process,
-    # we might need to terminate more forcefully.
+    QThread.msleep(50) 
 
-    # Try to interrupt by closing stdin if it's waiting for input.
-    # This is not guaranteed to stop a gnuplot script, but it's less disruptive than terminate.
-    # if self.gp.stdin and not self.gp.stdin.closed:
-    #     try: self.gp.stdin.close()
-    #     except IOError: pass
-
-    # Give a very short time for _doShutdown to be processed by read loop
-    QThread.msleep(50) # 50ms
-
-    if self.gp.poll() is None: # If still running after _doShutdown check should have happened
+    if self.gp.poll() is None: 
         print("stopScript: Gnuplot still running, proceeding to terminate.")
         self.gp.terminate()
         try:
@@ -396,9 +372,7 @@ class GnuplotInterface(QThread):
         print(f"executeLine: IOError during _write: {e}. Aborting line execution.")
         if not self.script and not self.scriptIdle.is_set():
             self.scriptIdle.set()
-        # The run() loop will catch the IOError and re-initialize.
-        # No need to emit processCrashed here as _write already does.
-        raise # Re-raise for run() to handle
+        raise 
 
     outstr_bytes = b''
     try:
@@ -419,17 +393,15 @@ class GnuplotInterface(QThread):
                 raise RuntimeError('Gnuplot terminated unexpectedly while reading output in executeLine')
 
             if self.gp.stdout is None: raise IOError("Gnuplot stdout is None during read.")
-            next_byte = self.gp.stdout.read(1) # This can block
-            if not next_byte: # EOF
+            next_byte = self.gp.stdout.read(1) 
+            if not next_byte: 
                 print("executeLine: EOF reading Gnuplot stdout, process likely died.")
                 if self._doShutdown: self._doShutdown = False; return 
                 
-                # Confirm process is dead before raising critical error
-                if self.gp.poll() is None: # Process seems alive but pipe closed?
-                    QThread.msleep(20) # Short pause, check again
-                    if self.gp.poll() is None: # Still alive, this is odd for EOF on blocking read
+                if self.gp.poll() is None: 
+                    QThread.msleep(20) 
+                    if self.gp.poll() is None: 
                          print("executeLine: EOF on stdout but process poll is None. Gnuplot might be stuck or pipe error.")
-                         # Treat as a crash anyway, as communication is broken.
                 
                 decoded_output = outstr_bytes.strip().decode(self.encoding, 'replace')
                 self.lineExecuted.emit(False, decoded_output + '\n\nGnuplot process EOF reached unexpectedly.', lno)
@@ -477,7 +449,7 @@ class GnuplotInterface(QThread):
         print(f"_pickPosition: IOError during _write: {e}. Aborting pick.")
         if not self.script and not self.scriptIdle.is_set():
             self.scriptIdle.set()
-        raise # Re-raise for run() to handle
+        raise 
 
     outstr_bytes = b''
     try:
@@ -534,9 +506,6 @@ class GnuplotInterface(QThread):
                   found_y = True
           if not (found_x and found_y): 
               if not ("pause mouse" in outstr_decoded and not lines_from_gp): 
-                # If 'pause mouse' is the only thing, it means user might have quit the pause (e.g. typed 'q')
-                # This is not necessarily an error, but MOUSE_X/Y won't be defined.
-                # For now, treat missing MOUSE_X/Y as an error unless it's clearly just a quit from pause.
                 if not ("pause mouse" in outstr_decoded and not any(s.startswith("x=") or s.startswith("y=") for s in lines_from_gp)):
                     print(f"Could not parse MOUSE_X/Y. Output: {outstr_decoded}")
                     err_in_output = True 
