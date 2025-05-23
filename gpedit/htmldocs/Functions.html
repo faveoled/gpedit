@@ -1,0 +1,240 @@
+<html lang="en">
+<head>
+<title>Functions - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Expressions.html#Expressions" title="Expressions">
+<link rel="prev" href="Expressions.html#Expressions" title="Expressions">
+<link rel="next" href="Operators.html#Operators" title="Operators">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Functions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Operators.html#Operators">Operators</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Expressions.html#Expressions">Expressions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Expressions.html#Expressions">Expressions</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.14.1 Functions</h4>
+
+<!-- ?expressions functions -->
+<p>The math functions in `gnuplot` are the same as the corresponding functions in
+the Unix math library, except that all functions accept integer, real, and
+complex arguments unless otherwise noted. 
+Functions that accept or return angles (e.g. sin(x), cos(x), arg(z))
+treat angle values as radians, but this may be changed to degrees using the
+command <a href="angles.html#angles">angles</a>.
+
+<!-- ^<table align="center" border="1" rules="groups" frame="hsides" cellpadding="3" width="90%"> -->
+<!-- ^<colgroup> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="left"> -->
+<!-- ^</colgroup> -->
+<!-- ^<thead> -->
+<!-- ^<tr>   <th colspan="3"> Math library functions </th></tr> -->
+<!-- ^<tr>    <th>Function</th>    <th>Arguments</th>    <th>Returns</th></tr> -->
+<!-- ^</thead> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <td>abs(x)</td>    <td>any</td>    <td>|<i>x</i>|, absolute value of <i>x</i>; same type</td></tr> -->
+<!-- ^<tr>    <td>abs(x)</td>    <td>complex</td>    <td>length of <i>x</i>, &radic;( Re(<i>x</i>)<sup>2</sup> + Im(<i>x</i>)<sup>2</sup> )</td></tr> -->
+<!-- ^<tr>    <td>acos(x)</td>    <td>any</td>    <td>cos<sup>-1</sup> <i>x</i> (inverse cosine)</td></tr> -->
+<!-- ^<tr>    <td>acosh(x)</td>    <td>any</td>    <td>cosh<sup>-1</sup> <i>x</i> (inverse hyperbolic cosine) in radians</td></tr> -->
+<!-- ^<tr>    <td>airy(x)</td>    <td>any</td>    <td>Airy function Ai(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>arg(x)</td>    <td>complex</td>    <td>the phase of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>asin(x)</td>    <td>any</td>    <td>sin<sup>-1</sup> <i>x</i> (inverse sin)</td></tr> -->
+<!-- ^<tr>    <td>asinh(x)</td>    <td>any</td>    <td>sinh<sup>-1</sup> <i>x</i> (inverse hyperbolic sin) in radians</td></tr> -->
+<!-- ^<tr>    <td>atan(x)</td>    <td>any</td>    <td>tan<sup>-1</sup> <i>x</i> (inverse tangent)</td></tr> -->
+<!-- ^<tr>    <td>atan2(y,x)</td>    <td>int or real</td>    <td>tan<sup>-1</sup>(<i>y/x</i>) (inverse tangent)</td></tr> -->
+<!-- ^<tr>    <td>atanh(x)</td>    <td>any</td>    <td>tanh<sup>-1</sup> <i>x</i> (inverse hyperbolic tangent) in radians</td></tr> -->
+<!-- ^<tr>    <td>EllipticK(k)</td>    <td>real k in (-1:1)</td>    <td><i>K(k)</i> complete elliptic integral of the first kind</td></tr> -->
+<!-- ^<tr>    <td>EllipticE(k)</td>    <td>real k in [-1:1]</td>    <td><i>E(k)</i> complete elliptic integral of the second kind</td></tr> -->
+<!-- ^<tr>    <td>EllipticPi(n,k)</td>    <td> real n&lt;1, real k in (-1:1)</td>    <td> &Pi;(<i>n,k</i>) complete elliptic integral of the third kind</td></tr> -->
+<!-- ^<tr>    <td>besj0(x)</td>    <td>int or real</td>    <td><i>j</i><sub>0</sub> Bessel function of <i>x</i>, in radians</td></tr> -->
+<!-- ^<tr>    <td>besj1(x)</td>    <td>int or real</td>    <td><i>j</i><sub>1</sub> Bessel function of <i>x</i>, in radians</td></tr> -->
+<!-- ^<tr>    <td>besy0(x)</td>    <td>int or real</td>    <td><i>y</i><sub>0</sub> Bessel function of <i>x</i>, in radians</td></tr> -->
+<!-- ^<tr>    <td>besy1(x)</td>    <td>int or real</td>    <td><i>y</i><sub>1</sub> Bessel function of <i>x</i>, in radians</td></tr> -->
+<!-- ^<tr>    <td>ceil(x)</td>    <td>any</td>    <td>&lceil;<i>x</i>&rceil;, smallest integer not less than <i>x</i> (real part)</td></tr> -->
+<!-- ^<tr>    <td>cos(x)</td>    <td>radians</td>    <td>cos <i>x</i>, cosine of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>cosh(x)</td>    <td>any</td>    <td>cosh <i>x</i>, hyperbolic cosine of <i>x</i> in radians</td></tr> -->
+<!-- ^<tr>    <td>erf(x)</td>    <td>any</td>    <td>erf(Re(<i>x</i>)), error function of real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>erfc(x)</td>    <td>any</td>    <td>erfc(Re(<i>x</i>)), 1.0 - error function of real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>exp(x)</td>    <td>any</td>    <td><i>e<sup>x</sup></i>, exponential function of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>expint(n,x)</td>    <td>any</td>    <td><i>E<sub>n</sub></i>(<i>x</i>), exponential integral function of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>floor(x)</td>    <td>any</td>    <td>&lfloor;<i>x</i>&rfloor;, largest integer not greater than <i>x</i> (real part)</td></tr> -->
+<!-- ^<tr>    <td>gamma(x)</td>    <td>any</td>    <td>&Gamma;(Re(<i>x</i>)), gamma function of real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>ibeta(p,q,x)</td>    <td>any</td>    <td>ibeta(Re(<i>p,q,x</i>)), ibeta function of real(<i>p</i>,<i>q</i>,<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>inverf(x)</td>    <td>any</td>    <td>inverse error function real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>igamma(a,x)</td>    <td>any</td>    <td>igamma(Re(<i>a,x</i>)), igamma function of real(<a>a</a>,<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>imag(x)</td>    <td>complex</td>    <td>Im(<i>x</i>), imaginary part of <i>x</i> as a real number</td></tr> -->
+<!-- ^<tr>    <td>invnorm(x)</td>    <td>any</td>    <td>inverse normal distribution function real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>int(x)</td>    <td>real</td>    <td>integer part of <i>x</i>, truncated toward zero</td></tr> -->
+<!-- ^<tr>    <td>lambertw(x)</td>    <td>real</td>    <td>Lambert W function</td></tr> -->
+<!-- ^<tr>    <td>lgamma(x)</td>    <td>any</td>    <td>lgamma(Re(<i>x</i>)), lgamma function of real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>log(x)</td>    <td>any</td>    <td>ln <i>x</i>, natural logarithm (base <i>e</i>) of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>log10(x)</td>    <td>any</td>    <td>log<sub>10</sub> <i>x</i>, logarithm (base 10) of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>norm(x)</td>    <td>any</td>    <td>norm(<i>x</i>), normal distribution function of real(<i>x</i>)</td></tr> -->
+<!-- ^<tr>    <td>rand(x)</td>    <td>int</td>    <td>pseudo random number in the interval [0:1]</td></tr> -->
+<!-- ^<tr>    <td>real(x)</td>    <td>any</td>    <td>Re(<i>x</i>), real part of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>sgn(x)</td>    <td>any</td>    <td>1 if <i>x</i> &gt; 0,  -1 if <i>x</i> &lt; 0,  0 if <i>x</i> = 0. &image;(<i>x</i>) ignored</td></tr> -->
+<!-- ^<tr>    <td>sin(x)</td>    <td>any</td>    <td>sin <i>x</i>, sine of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>sinh(x)</td>    <td>any</td>    <td>sinh <i>x</i>, hyperbolic sine of <i>x</i> in radians</td></tr> -->
+<!-- ^<tr>    <td>sqrt(x)</td>    <td>any</td>    <td>&radic;<i>x</i>, square root of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>tan(x)</td>    <td>any</td>    <td>tan <i>x</i>, tangent of <i>x</i></td></tr> -->
+<!-- ^<tr>    <td>tanh(x)</td>    <td>any</td>    <td>tanh <i>x</i>, hyperbolic tangent of <i>x</i> in radians</td></tr> -->
+<!-- ^<tr>    <td>voigt(x,y)</td>    <td>real</td>    <td>convolution of Gaussian and Lorentzian</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^</table> -->
+<!-- ^<p>&nbsp;</p> -->
+<!-- ^<table align="center" border="1" rules="groups" frame="hsides" cellpadding="3" width="90%"> -->
+<!-- ^<colgroup> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="left"> -->
+<!-- ^</colgroup> -->
+<!-- ^<thead> -->
+<!-- ^<tr>   <th colspan="3"> String functions </th></tr> -->
+<!-- ^<tr>    <th>Function</th>    <th>Arguments</th>    <th>Returns</th></tr> -->
+<!-- ^</thead> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <td>gprintf("format",x,...)</td>    <td>any</td>    <td>string result from applying gnuplot's format parser</td></tr> -->
+<!-- ^<tr>    <td>sprintf("format",x,...)</td>    <td>multiple</td>    <td>string result from C-language sprintf</td></tr> -->
+<!-- ^<tr>    <td>strlen("string")</td>    <td>string</td>    <td>int length of string in bytes</td></tr> -->
+<!-- ^<tr>    <td>strstrt("string","key")</td>    <td>strings</td>    <td>int index of first character of substring "key"</td></tr> -->
+<!-- ^<tr>    <td>substr("string",beg,end)</td>    <td>multiple</td>    <td>string "string"[beg:end]</td></tr> -->
+<!-- ^<tr>    <td>strftime("timeformat",t)</td>    <td>any</td>    <td>string result from applying gnuplot's time parser</td></tr> -->
+<!-- ^<tr>    <td>strptime("timeformat",s)</td>    <td>string</td>    <td>seconds since year 2000 as given in string s</td></tr> -->
+<!-- ^<tr>    <td>system("command")</td>    <td>string</td>    <td>string containing output stream of shell command</td></tr> -->
+<!-- ^<tr>    <td>word("string",n)</td>    <td>string, int</td>    <td>returns the nth word in "string"</td></tr> -->
+<!-- ^<tr>    <td>words("string")</td>    <td>string</td>    <td>returns the number of words in "string"</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^</table> -->
+<!-- ^<p>&nbsp;</p> -->
+<!-- ^<table align="center" border="1" rules="groups" frame="hsides" cellpadding="3" width="90%"> -->
+<!-- ^<colgroup> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="left"> -->
+<!-- ^</colgroup> -->
+<!-- ^<thead> -->
+<!-- ^<tr>   <th colspan="3"> other gnuplot functions </th></tr> -->
+<!-- ^<tr>    <th>Function</th>    <th>Arguments</th>    <th>Returns</th></tr> -->
+<!-- ^</thead> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <td>column(x)</td>    <td>int or string</td>    <td> contents of column <i>x</i> during data input.</td></tr> -->
+<!-- ^<tr>    <td>columnhead(x)</td>    <td>int</td>    <td> string containing first entry of column <i>x</i> in datafile.</td></tr> -->
+<!-- ^<tr>    <td>defined(X)</td>    <td>variable name</td>    <td> [DEPRECATED] returns 1 if X is defined, 0 otherwise.</td></tr> -->
+<!-- ^<tr>    <td>exists("X")</td>    <td>string</td>    <td> returns 1 if a variable named X is defined, 0 otherwise.</td></tr> -->
+<!-- ^<tr>    <td>stringcolumn(x)</td>    <td>int</td>    <td> content column <i>x</i> as a string.</td></tr> -->
+<!-- ^<tr>    <td>timecolumn(x)</td>    <td>int</td>    <td> timecolumn <i>x</i> during datafile manipulation.</td></tr> -->
+<!-- ^<tr>    <td>tm_hour(x)</td>    <td>int</td>    <td>the hour</td></tr> -->
+<!-- ^<tr>    <td>tm_mday(x)</td>    <td>int</td>    <td>the day of the month</td></tr> -->
+<!-- ^<tr>    <td>tm_min(x)</td>    <td>int</td>    <td>the minute</td></tr> -->
+<!-- ^<tr>    <td>tm_mon(x)</td>    <td>int</td>    <td>the month</td></tr> -->
+<!-- ^<tr>    <td>tm_sec(x)</td>    <td>int</td>    <td>the second</td></tr> -->
+<!-- ^<tr>    <td>tm_wday(x)</td>    <td>int</td>    <td>the day of the week</td></tr> -->
+<!-- ^<tr>    <td>tm_yday(x)</td>    <td>int</td>    <td>the day of the year</td></tr> -->
+<!-- ^<tr>    <td>tm_year(x)</td>    <td>int</td>    <td>the year</td></tr> -->
+<!-- ^<tr>    <td>time(x)</td>    <td>any</td>    <td>the current system time</td></tr> -->
+<!-- ^<tr>    <td>valid(x)</td>    <td>int</td>    <td> test validity of column(<i>x</i>) during datafile manip.</td></tr> -->
+<!-- ^<tr>    <td>value("name")</td>    <td>string</td>    <td> returns the current value of the named variable.</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^</table> -->
+<!-- ^<!- INCLUDE_NEXT_TABLE -> -->
+<ul class="menu">
+<li><a accesskey="1" href="abs.html#abs">abs</a>
+<li><a accesskey="2" href="acos.html#acos">acos</a>
+<li><a accesskey="3" href="acosh.html#acosh">acosh</a>
+<li><a accesskey="4" href="airy.html#airy">airy</a>
+<li><a accesskey="5" href="arg.html#arg">arg</a>
+<li><a accesskey="6" href="asin.html#asin">asin</a>
+<li><a accesskey="7" href="asinh.html#asinh">asinh</a>
+<li><a accesskey="8" href="atan.html#atan">atan</a>
+<li><a accesskey="9" href="atan2.html#atan2">atan2</a>
+<li><a href="atanh.html#atanh">atanh</a>
+<li><a href="EllipticK.html#EllipticK">EllipticK</a>
+<li><a href="EllipticE.html#EllipticE">EllipticE</a>
+<li><a href="EllipticPi.html#EllipticPi">EllipticPi</a>
+<li><a href="besj0.html#besj0">besj0</a>
+<li><a href="besj1.html#besj1">besj1</a>
+<li><a href="besy0.html#besy0">besy0</a>
+<li><a href="besy1.html#besy1">besy1</a>
+<li><a href="ceil.html#ceil">ceil</a>
+<li><a href="cos.html#cos">cos</a>
+<li><a href="cosh.html#cosh">cosh</a>
+<li><a href="erf.html#erf">erf</a>
+<li><a href="erfc.html#erfc">erfc</a>
+<li><a href="exp.html#exp">exp</a>
+<li><a href="expint.html#expint">expint</a>
+<li><a href="floor.html#floor">floor</a>
+<li><a href="gamma.html#gamma">gamma</a>
+<li><a href="ibeta.html#ibeta">ibeta</a>
+<li><a href="inverf.html#inverf">inverf</a>
+<li><a href="igamma.html#igamma">igamma</a>
+<li><a href="imag.html#imag">imag</a>
+<li><a href="invnorm.html#invnorm">invnorm</a>
+<li><a href="int.html#int">int</a>
+<li><a href="lambertw.html#lambertw">lambertw</a>
+<li><a href="lgamma.html#lgamma">lgamma</a>
+<li><a href="log.html#log">log</a>
+<li><a href="log10.html#log10">log10</a>
+<li><a href="norm.html#norm">norm</a>
+<li><a href="rand.html#rand">rand</a>
+<li><a href="real.html#real">real</a>
+<li><a href="sgn.html#sgn">sgn</a>
+<li><a href="sin.html#sin">sin</a>
+<li><a href="sinh.html#sinh">sinh</a>
+<li><a href="sqrt.html#sqrt">sqrt</a>
+<li><a href="tan.html#tan">tan</a>
+<li><a href="tanh.html#tanh">tanh</a>
+<li><a href="voigt.html#voigt">voigt</a>
+<li><a href="gprintf.html#gprintf">gprintf</a>
+<li><a href="sprintf.html#sprintf">sprintf</a>
+<li><a href="strlen.html#strlen">strlen</a>
+<li><a href="strstrt.html#strstrt">strstrt</a>
+<li><a href="substr.html#substr">substr</a>
+<li><a href="strftime.html#strftime">strftime</a>
+<li><a href="strptime.html#strptime">strptime</a>
+<li><a href="system.html#system">system</a>
+<li><a href="word.html#word">word</a>
+<li><a href="words.html#words">words</a>
+<li><a href="column.html#column">column</a>
+<li><a href="columnhead.html#columnhead">columnhead</a>
+<li><a href="defined.html#defined">defined</a>
+<li><a href="exists.html#exists">exists</a>
+<li><a href="stringcolumn.html#stringcolumn">stringcolumn</a>
+<li><a href="timecolumn.html#timecolumn">timecolumn</a>
+<li><a href="tm_005fhour.html#tm_005fhour">tm_hour</a>
+<li><a href="tm_005fmday.html#tm_005fmday">tm_mday</a>
+<li><a href="tm_005fmin.html#tm_005fmin">tm_min</a>
+<li><a href="tm_005fmon.html#tm_005fmon">tm_mon</a>
+<li><a href="tm_005fsec.html#tm_005fsec">tm_sec</a>
+<li><a href="tm_005fwday.html#tm_005fwday">tm_wday</a>
+<li><a href="tm_005fyday.html#tm_005fyday">tm_yday</a>
+<li><a href="tm_005fyear.html#tm_005fyear">tm_year</a>
+<li><a href="time.html#time">time</a>
+<li><a href="valid.html#valid">valid</a>
+<li><a href="elliptic_005fintegrals.html#elliptic_005fintegrals">elliptic_integrals</a>
+<li><a href="Random_005fnumber_005fgenerator.html#Random_005fnumber_005fgenerator">Random_number_generator</a>
+<li><a href="value.html#value">value</a>
+</ul>
+
+   </body></html>
+

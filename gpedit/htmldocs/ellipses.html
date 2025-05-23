@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>ellipses - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="plotting_005fstyles.html#plotting_005fstyles" title="plotting_styles">
+<link rel="prev" href="circles.html#circles" title="circles">
+<link rel="next" href="dots.html#dots" title="dots">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="ellipses"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="dots.html#dots">dots</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="circles.html#circles">circles</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="plotting_005fstyles.html#plotting_005fstyles">plotting_styles</a>
+<hr>
+</div>
+
+<h3 class="section">2.7 ellipses</h3>
+
+<!-- ?plotting styles ellipses -->
+<!-- ?style ellipses -->
+<p><a name="index-ellipses-260"></a>
+The <a href="ellipses.html#ellipses">ellipses</a> style plots an ellipse at each data point.  This style is
+only relevant for 2D plotting.  Each ellipse is described in terms of its
+center, major and minor diameters, and the angle between its major diameter
+and the x axis.
+
+<pre class="example">          2 columns: x y
+          3 columns: x y major_diam
+          4 columns: x y major_diam minor_diam
+          5 columns: x y major_diam minor_diam angle
+     
+</pre>
+   <p>If only two input columns are present, they are taken as the coordinates of
+the centers, and the ellipses will be drawn with the default extent
+(see `set style ellipse`).  The orientation of the ellipse, which is
+defined as the angle between the major diameter and the plot's x axis,
+is taken from the default ellipse style (see `set style ellipse`). 
+If three input columns are provided, the third column is used for both
+diameters.  The orientation angle defaults to zero. 
+If four columns are present, they are interpreted as x, y, major diameter,
+minor diameter.  Note that these are diameters, not radii. 
+An optional 5th column may be used to specify the orientation angle
+in degrees. 
+The ellipses will also be drawn with their default extent if either of the
+supplied diameters in the 3-4-5 column form is negative.
+
+   <p>In all of the above cases, optional variable color data may be given in an
+additional last (3th, 4th, 5th or 6th) column. See <a href="colorspec.html#colorspec">colorspec</a> for further
+information.
+
+   <p>By default, the major diameter is interpreted in the units of the plot's
+horizontal axis (x or x2) while the minor diameter in that of the vertical
+(y or y2).  This implies that if the x and y axis scales are not equal,
+then the major/minor diameter ratio will no longer be correct after rotation. 
+This behavior can be changed with the `units` keyword, however.
+
+   <p>There are three alternatives:
+if `units xy` is included in the plot specification, the axes will be scaled
+as described above. `units xx` ensures that both diameters are interpreted
+in units of the x axis, while `units yy` means that both diameters are
+interpreted in units of the y axis. In the latter two cases the ellipses
+will have the correct aspect ratio, even if the plot is resized.
+
+   <p>If `units` is omitted, the default setting will be used, which is equivalent
+to `units xy`. This can be redefined by `set style ellipse`.
+
+   <p>Example (draws ellipses, cycling through the available line types):
+
+<pre class="example">         plot 'data' using 1:2:3:4:(0):0 with ellipses
+     
+</pre>
+   <p>See also `set object ellipse`, `set style ellipse` and `fillstyle`.
+
+   </body></html>
+

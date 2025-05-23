@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+<title>skip - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="binary.html#binary" title="binary">
+<link rel="prev" href="record.html#record" title="record">
+<link rel="next" href="format.html#format" title="format">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="skip"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="format.html#format">format</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="record.html#record">record</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="binary.html#binary">binary</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.2.4 skip</h5>
+
+<!-- ?binary skip -->
+<p>This keyword allows you to skip sections of a binary file. For instance, if the
+file contains a 1024 byte header before the start of the data region you would
+probably want to use
+<pre class="example">           plot '&lt;file_name&gt;' binary skip=1024 ...
+</pre>
+   <p>If there are multiple records in the file, you may specify a leading offset for
+each. For example, to skip 512 bytes before the 1st record and 256 bytes before
+the second and third records
+<pre class="example">           plot '&lt;file_name&gt; binary record=356:356:356 skip=512:256:256 ...
+     
+</pre>
+   </body></html>
+

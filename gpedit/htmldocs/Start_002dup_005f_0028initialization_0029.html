@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+<title>Start-up_(initialization) - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="gnuplot.html#gnuplot" title="gnuplot">
+<link rel="prev" href="Plotting.html#Plotting" title="Plotting">
+<link rel="next" href="String_005fconstants_005fand_005fstring_005fvariables.html#String_005fconstants_005fand_005fstring_005fvariables" title="String_constants_and_string_variables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Start-up_(initialization)"></a>
+<a name="Start_002dup_005f_0028initialization_0029"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="String_005fconstants_005fand_005fstring_005fvariables.html#String_005fconstants_005fand_005fstring_005fvariables">String_constants_and_string_variables</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Plotting.html#Plotting">Plotting</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="gnuplot.html#gnuplot">gnuplot</a>
+<hr>
+</div>
+
+<h3 class="section">1.20 Start-up (initialization)</h3>
+
+<p><a name="index-startup-235"></a>
+<a name="index-start-236"></a>
+<a name="index-start_002dup-237"></a>
+<a name="index-initialization-238"></a>
+<a name="index-g_t_002egnuplot-239"></a>
+When gnuplot is run, it first looks for a system-wide initialization file named
+`gnuplotrc`.  The location of this file is determined when the program is built
+and is reported by <a href="loadpath.html#loadpath">loadpath</a>.  The program then looks in the user's HOME
+directory for a file called `.gnuplot` on Unix-like systems or `GNUPLOT.INI` on
+other systems.  (Windows and OS/2 will look for it in the directory named in
+the environment variable `GNUPLOT`; Windows will use `USERPROFILE` if GNUPLOT
+is not defined). 
+Note: The program can be configured to look first in the current directory,
+but this is not recommended because it is bad security practice.
+
+   </body></html>
+

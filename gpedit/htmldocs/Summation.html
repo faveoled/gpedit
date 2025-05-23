@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+<title>Summation - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Expressions.html#Expressions" title="Expressions">
+<link rel="prev" href="Operators.html#Operators" title="Operators">
+<link rel="next" href="Gnuplot_002ddefined_005fvariables.html#Gnuplot_002ddefined_005fvariables" title="Gnuplot-defined_variables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Summation"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Gnuplot_002ddefined_005fvariables.html#Gnuplot_002ddefined_005fvariables">Gnuplot-defined_variables</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Operators.html#Operators">Operators</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Expressions.html#Expressions">Expressions</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.14.3 Summation</h4>
+
+<!-- ?expressions operators summation -->
+<!-- ?operators summation -->
+<p><a name="index-summation-190"></a>
+A summation expression has the form
+<pre class="example">           sum [&lt;var&gt; = &lt;start&gt; : &lt;end&gt;] &lt;expression&gt;
+</pre>
+   <p>&lt;var&gt; is treated as an integer variable that takes on successive integral
+values from &lt;start&gt; to &lt;end&gt;.  For each of these, the current value of
+&lt;expression&gt; is added to a running total whose final value becomes the value
+of the summation expression. 
+Examples:
+<pre class="example">           print sum [i=1:10] i
+               55.
+           # Equivalent to plot 'data' using 1:($2+$3+$4+$5+$6+...)
+           plot 'data' using 1 : (sum [col=2:MAXCOL] column(col))
+</pre>
+   <p>It is not necessary that &lt;expression&gt; contain the variable &lt;var&gt;. 
+Although &lt;start&gt; and &lt;end&gt; can be specified as variables or expressions,
+their value cannot be changed dynamically as a side-effect of carrying
+out the summation. If &lt;end&gt; is less than &lt;start&gt; then the value of the
+summation is zero.
+
+   </body></html>
+

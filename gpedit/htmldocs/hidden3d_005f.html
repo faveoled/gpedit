@@ -1,0 +1,56 @@
+<html lang="en">
+<head>
+<title>hidden3d_ - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="pm3d.html#pm3d" title="pm3d">
+<link rel="prev" href="color_005fassignment.html#color_005fassignment" title="color_assignment">
+<link rel="next" href="interpolate.html#interpolate" title="interpolate">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="hidden3d_"></a>
+<a name="hidden3d_005f"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="interpolate.html#interpolate">interpolate</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="color_005fassignment.html#color_005fassignment">color_assignment</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="pm3d.html#pm3d">pm3d</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.53.6 hidden3d</h5>
+
+<!-- ?set pm3d hidden3d -->
+<!-- ?pm3d hidden3d -->
+<p>The option <a href="hidden3d.html#hidden3d">hidden3d</a> draws the bounding lines of each quadrangle
+at the same time that the quadrangle itself is drawn. Normally it is used in
+conjunction with the `depthorder` option to achieve an approximation to true
+hidden line removal.  This is far more efficient than using the command
+<a href="hidden3d.html#hidden3d">hidden3d</a>.  The command takes an optional linestyle controlling the
+appearance of the bounding lines.  If the linestyle parameter is negative,
+or omitted, then the line properties given in the plot command are used. 
+Example of recommended usage:
+
+<pre class="example">           set pm3d at s hidden3d depthorder
+           unset hidden3d
+           unset surf
+           splot x*x+y*y linecolor rgb "black" linewidth 0.5
+     
+</pre>
+   </body></html>
+

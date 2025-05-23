@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+<title>New_or_revised_terminal_drivers - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="New_005ffeatures.html#New_005ffeatures" title="New_features">
+<link rel="prev" href="Statistical_005fsummary_005fof_005fdata.html#Statistical_005fsummary_005fof_005fdata" title="Statistical_summary_of_data">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="New_or_revised_terminal_drivers"></a>
+<a name="New_005for_005frevised_005fterminal_005fdrivers"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Statistical_005fsummary_005fof_005fdata.html#Statistical_005fsummary_005fof_005fdata">Statistical_summary_of_data</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="New_005ffeatures.html#New_005ffeatures">New_features</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.4.8 New or revised terminal drivers</h4>
+
+<p>The `qt` driver implements an interactive terminal on top of the Qt
+graphics layer.  It can function either as a window in a full-featured
+desktop enviroment or as a full-screen application on a Qt-based
+embedded device.  The `qt` terminal is new and may still have some
+rough edges.
+
+   <p>Two terminal types support web-based interactive display. The HTML5 `canvas`
+terminal was introduced in version 4.4. The `svg` terminal has been extensively
+revised to include support for mousing and better incorporation of svg plots
+from gnuplot into larger svg/xml documents.
+
+   <p>The `canvas` terminal driver produces javascript output that draws onto the
+HTML canvas element of a web page.  It can produce either a complete web page
+containing a single plot, or a script that can be embedded as part of an
+externally generated HTML document that perhaps contains multiple plots. 
+The embedded plots support browser-side mousing, including zoom/unzoom.
+
+   <p>The `lua` terminal driver creates data intended to be further processed
+by a script in the lua programming language.  At this point only one such
+lua script, gnuplot-tikz.lua, is available.  It produces a TeX document
+suitable for use with the latex TikZ package.  Other lua scripts could be
+written to process the gnuplot output for use with other TeX packages,
+or with other non-TeX tools.
+
+   <p>`set term tikz` is shorthand for `set term lua tikz`.  As decribed above, it
+uses the generic lua terminal and an external lua script to produce a latex
+document.
+
+   <p>The `context` terminal driver creates output to be further processed by
+the ConTeXt TeX macro package. To process its output, you additionally require
+the gnuplot module for ConTeXt available at
+<a href="http://ctan.org/pkg/context-gnuplot">http://ctan.org/pkg/context-gnuplot</a>
+
+   <p>The `epscairo` terminal uses the cairo and pango libraries to create
+encapsulated postscript (eps) ouput. It is an alternative to the `postscript`
+terminal driver for those who would like to have their eps files look equal
+to e.g. screen output by the `wxt` terminal.
+
+   <p>The `cairolatex` terminal uses the cairo backend of the `pdfcairo` or
+`epscairo` terminal to produce graphs for inclusion in LaTeX documents. It
+creates pdf or eps graphics but transfers texts to LaTeX in the same way as
+the `epslatex` terminal.
+
+   <p>The `windows` terminal driver has been revised to suport transparency,
+antialiasing, buffered output, multiple graph windows and copying to clipboard
+and saving of graphs as emf files. It has many new options and a revised user
+interface. Additionaly, the code of the text console has been largely rewritten
+to support wrapping of long lines. Help is now provided via HTML.
+
+   </body></html>
+

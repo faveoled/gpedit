@@ -1,0 +1,100 @@
+<html lang="en">
+<head>
+<title>binary - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="plot.html#plot" title="plot">
+<link rel="prev" href="axes.html#axes" title="axes">
+<link rel="next" href="data.html#data" title="data">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="binary"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="data.html#data">data</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="axes.html#axes">axes</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="plot.html#plot">plot</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.15.2 binary</h4>
+
+<p><a name="index-binary-339"></a>
+<!-- ?data binary -->
+<!-- ?datafile binary -->
+<!-- ?plot data binary -->
+BINARY DATA FILES:
+
+   <p>Some earlier versions of `gnuplot` automatically detected binary data files. 
+It is now necessary to provide the keyword <a href="binary.html#binary">binary</a> after the filename. 
+Adequate details of the file format must be given on the command line or
+extracted from the file itself for a supported binary <a href="filetype.html#filetype">filetype</a>. 
+In particular, there are two structures for binary files,  binary matrix
+format and binary general format.
+
+   <p>The <a href="matrix.html#matrix">matrix</a> format contains a two dimensional array of 32 bit IEEE
+float values with an additional column and row of coordinate values.  As
+with ASCII matrix, in the <a href="using.html#using">using</a> list, enumeration of the coordinate row
+constitutes column 1, enumeration of the coordinate column constitutes
+column 2, and the array of values constitutes column 3.
+
+   <p>The <a href="general.html#general">general</a> format contains an arbitrary number of columns for which
+information must be specified at the command line.  For example, <a href="array.html#array">array</a>,
+<a href="record.html#record">record</a>, `format` and <a href="using.html#using">using</a> can indicate the size, format and dimension
+of data.  There are a variety of useful commands for skipping file headers
+and changing endianess.  There are a set of commands for positioning and
+translating data since often coordinates are not part of the file when
+uniform sampling is inherent in the data.  Different from matrix binary or
+ASCII, general binary does not treat the generated columns as 1, 2 or 3 in
+the <a href="using.html#using">using</a> list.  Rather, column 1 begins with column 1 of the file, or as
+specified in the `format` list.
+
+   <p>There are global default settings for the various binary options which may
+be set using the same syntax as the options when used as part of the `(s)plot
+&lt;filename&gt; binary ...` command.  This syntax is `set datafile binary ...`. 
+The general rule is that common command-line specified parameters override
+file-extracted parameters which override default parameters.
+
+   <p><a href="matrix.html#matrix">matrix</a> is the default binary format when no keywords specific to
+<a href="general.html#general">general</a> are given, i.e., <a href="array.html#array">array</a>, <a href="record.html#record">record</a>, `format`, <a href="filetype.html#filetype">filetype</a>.
+
+   <p>General binary data can be entered at the command line via the special file
+name '-'.  However, this is intended for use through a pipe where programs
+can exchange binary data, not for keyboards.  There is no "end of record"
+character for binary data.  Gnuplot continues reading from a pipe until it
+has read the number of points declared in the <a href="array.html#array">array</a> qualifier. 
+See <a href="matrix.html#matrix">matrix</a> or <a href="general.html#general">general</a> for more details.
+
+   <p>The <a href="index.html#index">index</a> keyword is not supported, since the file format allows only one
+surface per file.  The <a href="every.html#every">every</a> and <a href="using.html#using">using</a> filters are supported.  <a href="using.html#using">using</a>
+operates as if the data were read in the above triplet form. 
+<a href="http://www.gnuplot.info/demo/binary.html">Binary File Splot Demo.</a>
+
+<ul class="menu">
+<li><a accesskey="1" href="general.html#general">general</a>
+<li><a accesskey="2" href="array.html#array">array</a>
+<li><a accesskey="3" href="record.html#record">record</a>
+<li><a accesskey="4" href="skip.html#skip">skip</a>
+<li><a accesskey="5" href="format.html#format">format</a>
+<li><a accesskey="6" href="endian.html#endian">endian</a>
+<li><a accesskey="7" href="filetype.html#filetype">filetype</a>
+<li><a accesskey="8" href="keywords.html#keywords">keywords</a>
+</ul>
+
+   </body></html>
+

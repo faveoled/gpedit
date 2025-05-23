@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+<title>New_time/date_handling - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="New_005ffeatures.html#New_005ffeatures" title="New_features">
+<link rel="prev" href="New_005fsmoothing_005falgorithms.html#New_005fsmoothing_005falgorithms" title="New_smoothing_algorithms">
+<link rel="next" href="Statistical_005fsummary_005fof_005fdata.html#Statistical_005fsummary_005fof_005fdata" title="Statistical_summary_of_data">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="New_time%2fdate_handling"></a>
+<a name="New_005ftime_002fdate_005fhandling"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Statistical_005fsummary_005fof_005fdata.html#Statistical_005fsummary_005fof_005fdata">Statistical_summary_of_data</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="New_005fsmoothing_005falgorithms.html#New_005fsmoothing_005falgorithms">New_smoothing_algorithms</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="New_005ffeatures.html#New_005ffeatures">New_features</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.4.6 New time/date handling</h4>
+
+<p><a name="index-time-12"></a><a name="index-time-13"></a>
+
+   <p>Gnuplot now tracks time to millisecond precision. Time formats have been
+modified to match this. The new built-in function time() returns the current
+time of day according to the system clock. 
+Example: print the current time to msec precision
+<pre class="example">          print strftime("%H:%M:%.3S %d-%b-%Y",time(0.0))
+          18:15:04.253 16-Apr-2011
+     
+</pre>
+   </body></html>
+

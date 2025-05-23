@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+<title>example_datafile - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="data.html#data" title="data">
+<link rel="prev" href="every.html#every" title="every">
+<link rel="next" href="index.html#index" title="index">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="example_datafile"></a>
+<a name="example_005fdatafile"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="index.html#index">index</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="every.html#every">every</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="data.html#data">data</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.3.2 example datafile</h5>
+
+<!-- ?commands plot datafile example -->
+<!-- ?plot datafile example -->
+<!-- ?plot example -->
+<!-- ?datafile example -->
+<!-- ?data-file example -->
+<p><a name="index-example-352"></a>
+This example plots the data in the file "population.dat" and a theoretical
+curve:
+
+<pre class="example">           pop(x) = 103*exp((1965-x)/10)
+           set xrange [1960:1990]
+           plot 'population.dat', pop(x)
+     
+</pre>
+   <p>The file "population.dat" might contain:
+
+<pre class="example">           # Gnu population in Antarctica since 1965
+              1965   103
+              1970   55
+              1975   34
+              1980   24
+              1985   10
+     
+</pre>
+   <p><a name="index-skip-353"></a>
+Binary examples:
+
+<pre class="example">           # Selects two float values (second one implicit) with a float value
+           # discarded between them for an indefinite length of 1D data.
+           plot '&lt;file_name&gt;' binary format="%float%*float" using 1:2 with lines
+     
+</pre>
+   <pre class="example">           # The data file header contains all details necessary for creating
+           # coordinates from an EDF file.
+           plot '&lt;file_name&gt;' binary filetype=edf with image
+           plot '&lt;file_name&gt;.edf' binary filetype=auto with image
+     
+</pre>
+   <pre class="example">           # Selects three unsigned characters for components of a raw RGB image
+           # and flips the y-dimension so that typical image orientation (start
+           # at top left corner) translates to the Cartesian plane.  Pixel
+           # spacing is given and there are two images in the file.  One of them
+           # is translated via origin.
+           plot '&lt;file_name&gt;' binary array=(512,1024):(1024,512) format='%uchar' \
+                dx=2:1 dy=1:2 origin=(0,0):(1024,1024) flipy u 1:2:3 w rgbimage
+     
+</pre>
+   <pre class="example">           # Four separate records in which the coordinates are part of the
+           # data file.  The file was created with a endianess different from
+           # the system on which gnuplot is running.
+           splot '&lt;file_name&gt;' binary record=30:30:29:26 endian=swap u 1:2:3
+     
+</pre>
+   <pre class="example">           # Same input file, but this time we skip the 1st and 3rd records
+           splot '&lt;file_name&gt;' binary record=30:26 skip=360:348 endian=swap u 1:2:3
+     
+</pre>
+   <p>See also <a href="matrix.html#matrix">matrix</a>.
+
+   </body></html>
+

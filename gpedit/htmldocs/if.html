@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+<title>if - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Commands.html#Commands" title="Commands">
+<link rel="prev" href="history.html#history" title="history">
+<link rel="next" href="iteration.html#iteration" title="iteration">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="if"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="iteration.html#iteration">iteration</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="history.html#history">history</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Commands.html#Commands">Commands</a>
+<hr>
+</div>
+
+<h3 class="section">3.10 if</h3>
+
+<!-- ?commands if -->
+<p><a name="index-if-324"></a><a name="index-if-325"></a>
+
+   <p>New syntax:
+<pre class="example">           if (&lt;condition&gt;) { &lt;command&gt;; &lt;command&gt;
+                  &lt;commands&gt;
+                  &lt;commands&gt;
+           } else {
+                  &lt;commands&gt;
+           }
+</pre>
+   <p>Old syntax:
+<pre class="example">           if (&lt;condition&gt;) &lt;command-line&gt; [; else if (&lt;condition&gt;) ...; else ...]
+     
+</pre>
+   <p>This version of gnuplot supports block-structured if/else statements. If the
+keyword `if` or `else` is immediately followed by an opening "{", then
+conditional execution applies to all statements, possibly on multiple input
+lines, until a matching "}" terminates the block.  If commands may be nested.
+
+   <p>The old single-line if/else syntax is still supported, but can not be
+mixed with the new block-structured syntax.  See <a href="if_002dold.html#if_002dold">if-old</a>.
+
+<ul class="menu">
+<li><a accesskey="1" href="if_002dold.html#if_002dold">if-old</a>
+</ul>
+
+   </body></html>
+

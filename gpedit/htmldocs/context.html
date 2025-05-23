@@ -1,0 +1,190 @@
+<html lang="en">
+<head>
+<title>context - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="complete_005flist_005fof_005fterminals.html#complete_005flist_005fof_005fterminals" title="complete_list_of_terminals">
+<link rel="prev" href="cgm.html#cgm" title="cgm">
+<link rel="next" href="corel.html#corel" title="corel">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="context"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="corel.html#corel">corel</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="cgm.html#cgm">cgm</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="complete_005flist_005fof_005fterminals.html#complete_005flist_005fof_005fterminals">complete_list_of_terminals</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">4.1.0.9 context</h5>
+
+<!-- ?commands set terminal context -->
+<!-- ?set terminal context -->
+<!-- ?terminal context -->
+<!-- ?set term context -->
+<!-- ?term context -->
+<p><a name="index-context-796"></a><a name="index-context-797"></a>
+
+   <p>ConTeXt is a macro package for TeX, highly integrated with Metapost
+(for drawing figures) and intended for creation of high-quality PDF documents. 
+The terminal outputs Metafun source, which can be edited manually,
+but you should be able to configure most things from outside.
+
+   <p>For an average user of ConTeXt + gnuplot module it's recommended to refer to
+`Using ConTeXt` rather than reading this page
+or to read the manual of the gnuplot module for ConTeXt.
+
+   <p>The `context` terminal supports the following options:
+
+   <p>Syntax:
+<pre class="example">          set term context {default}
+                  {defaultsize | size &lt;scale&gt; | size &lt;xsize&gt;{in|cm}, &lt;ysize&gt;{in|cm}}
+                  {input | standalone}
+                  {timestamp | notimestamp}
+                  {noheader | header "&lt;header&gt;"}
+                  {color | colour | monochrome}
+                  {rounded | mitered | beveled} {round | butt | squared}
+                  {dashed | solid} {dashlength | dl &lt;dl&gt;}
+                  {linewidth | lw &lt;lw&gt;}
+                  {fontscale &lt;fontscale&gt;}
+                  {mppoints | texpoints}
+                  {inlineimages | externalimages}
+                  {defaultfont | font "{&lt;fontname&gt;}{,&lt;fontsize&gt;}"}
+     
+</pre>
+   <p>In non-standalone (`input`) graphic only parameters <a href="size.html#size">size</a> to select graphic
+size, `fontscale` to scale all the labels for a factor &lt;fontscale&gt;
+and font size, make sense, the rest is silently
+ignored and should be configured in the .tex file which inputs the graphic. 
+It's highly recommended to set the proper fontsize if document font differs from
+12pt, so that gnuplot will know how much space to reserve for labels.
+
+   <p>`default` resets all the options to their default values.
+
+   <p>`defaultsize` sets the plot size to 5in,3in. 
+<a href="size.html#size">size</a> &lt;scale&gt; sets the plot size to &lt;scale&gt; times &lt;default value&gt;. 
+If two arguments are given (separated with ','), the first one sets
+the horizontal size and the second one the vertical size. 
+Size may be given without units (in which case it means relative to the default
+value), with inches ('in') or centimeters ('cm').
+
+   <p>`input` (default) creates a graphic that can be included into another ConTeXt
+document. 
+`standalone` adds some lines, so that the document might be compiled as-is. 
+You might also want to add `header` in that case.
+
+   <p>Use `header` for any additional settings/definitions/macros
+that you might want to include in a standalone graphic. `noheader` is the default.
+
+   <p>`notimestamp` prevents printing creation time in comments
+(if version control is used, one may prefer not to commit new version when only date changes).
+
+   <p>`color` to make color plots is the default, but `monochrome` doesn't do anything special yet. 
+If you have any good ideas how the behaviour should differ to suit the monochrome printers better,
+your suggestions are welcome.
+
+   <p>`rounded` (default), `mitered` and `beveled` control the shape of line joins. 
+`round` (default), `butt` and `squared` control the shape of line caps. 
+See PostScript or PDF Reference Manual for explanation. For wild-behaving functions
+and thick lines
+it is better to use `rounded` and `round` to prevent sharp corners in line joins. 
+(Some general support for this should be added to Gnuplot, so that the same options
+could be set for each line (style) separately).
+
+   <p>`dashed` (default) uses different dash patterns for different line types,
+`solid` draws all plots with solid lines.
+
+   <p>`dashlength` or `dl` scales the length of the dashed-line segments by &lt;dl&gt;. 
+`linewidth` or `lw` scales all linewidths by &lt;lw&gt;. 
+(lw 1 stands for 0.5bp, which is the default line width when drawing with Metapost.) 
+`fontscale` scales text labels for factor &lt;fontscale&gt; relative to default document font.
+
+   <p>`mppoints` uses predefined point shapes, drawn in Metapost. 
+`texpoints` uses easily configurable set of symbols, defined with ConTeXt
+in the following way:
+<pre class="example">          \\defineconversion[my own points][+,{\\ss x},\\mathematics{\\circ}]
+          \\setupGNUPLOTterminal[context][points=tex,pointset=my own points]
+     
+</pre>
+   <p>`inlineimages` writes binary images to a string and only works in ConTeXt MKIV. 
+`externalimages` writes PNG files to disk and also works with ConTeXt MKII. 
+Gnuplot needs to have support for PNG images built in for this to work.
+
+   <p>With `font` you can set font name and size in standalone graphics. 
+In non-standalone (`input`) mode only the font size is important
+to reserve enough space for text labels. 
+The command
+<pre class="example">          set term context font "myfont,ss,10"
+</pre>
+   <p>will result in
+<pre class="example">          \\setupbodyfont[myfont,ss,10pt]
+</pre>
+   <p>If you additionaly set `fontscale` to 0.8 for example,
+then the resulting font will be 8pt big and
+<pre class="example">          set label ... font "myfont,12"
+</pre>
+   <p>will come out as 9.6pt.
+
+   <p>It is your own responsibility to provide proper typescripts (and header),
+otherwise switching the font will have no effect. 
+For a standard font in ConTeXt MKII (pdfTeX) you could use:
+<pre class="example">          set terminal context standalone header '\\usetypescript[iwona][ec]' \\
+              font "iwona,ss,11"
+</pre>
+   <p>Please take a look into ConTeXt documentation, wiki or mailing list (archives)
+for any up-to-date information about font usage.
+
+   <p>Examples:
+<pre class="example">          set terminal context size 10cm, 5cm     # 10cm, 5cm
+          set terminal context size 4in, 3in      # 4in, 3in
+</pre>
+   <p>For standalone (whole-page) plots with labels in UTF-8 encoding:
+<pre class="example">          set terminal context standalone header '\\enableregime[utf-8]'
+</pre>
+   <p>, /* TODO: LaTeX formatting */
+
+<p class="noindent">&mdash; REQUIREMENTS &mdash;
+
+   <p>You need gnuplot module for ConTeXt
+<a href="http://ctan.org/pkg/context-gnuplot">http://ctan.org/pkg/context-gnuplot</a>
+and a recent version of ConTeXt. 
+If you want to call gnuplot on-the-fly, you also need write18 enabled. 
+In most TeX distributions this can be set with shell_escape=t in texmf.cnf.
+
+   <p>See
+<a href="http://wiki.contextgarden.net/Gnuplot">http://wiki.contextgarden.net/Gnuplot</a>
+for details about this terminal and for more exhaustive help &amp; examples.
+
+<p class="noindent">&mdash; CALLING GNUPLOT FROM CONTEXT &mdash;
+
+   <p>The easiest way to make plots in ConTeXt documents is
+<pre class="example">          \\usemodule[gnuplot]
+          \\starttext
+          \\title{How to draw nice plots with {\\sc gnuplot}?}
+          \\startGNUPLOTscript[sin]
+          set format y "%.1f"
+          plot sin(x) t '$\\sin(x)$'
+          \\stopGNUPLOTscript
+          \\useGNUPLOTgraphic[sin]
+          \\stoptext
+</pre>
+   <p>This will run gnuplot automatically and include the resulting figure in the document."
+
+   </body></html>
+

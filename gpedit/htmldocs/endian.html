@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+<title>endian - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="binary.html#binary" title="binary">
+<link rel="prev" href="format.html#format" title="format">
+<link rel="next" href="filetype.html#filetype" title="filetype">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="endian"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="filetype.html#filetype">filetype</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="format.html#format">format</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="binary.html#binary">binary</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.2.6 endian</h5>
+
+<!-- ?binary endian -->
+<p>Often the endianess of binary data in the file does not agree with the
+endianess used by the platform on which gnuplot is running.  Several words can
+direct gnuplot how to arrange bytes.  For example `endian=little` means treat
+the binary file as having byte significance from least to greatest. The options
+are
+
+<pre class="example">                   little:  least significant to greatest significance
+                      big:  greatest significance to least significance
+                  default:  assume file endianess is the same as compiler
+              swap (swab):  Interchange the significance.  (If things
+                            don't look right, try this.)
+     
+</pre>
+   <p>Gnuplot can support "middle" ("pdp") endian if it is compiled with that option.
+
+   </body></html>
+

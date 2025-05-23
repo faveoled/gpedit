@@ -1,0 +1,110 @@
+<html lang="en">
+<head>
+<title>boxplot_ - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="style.html#style" title="style">
+<link rel="prev" href="set_005fstyle_005farrow.html#set_005fstyle_005farrow" title="set_style_arrow">
+<link rel="next" href="set_005fstyle_005fdata.html#set_005fstyle_005fdata" title="set_style_data">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="boxplot_"></a>
+<a name="boxplot_005f"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="set_005fstyle_005fdata.html#set_005fstyle_005fdata">set_style_data</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="set_005fstyle_005farrow.html#set_005fstyle_005farrow">set_style_arrow</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="style.html#style">style</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.66.2 boxplot</h5>
+
+<!-- ?commands set style boxplot -->
+<!-- ?commands unset style boxplot -->
+<!-- ?commands show style boxplot -->
+<!-- ?set style boxplot -->
+<!-- ?unset style boxplot -->
+<!-- ?show style boxplot -->
+<p>The <a href="boxplot.html#boxplot">boxplot</a> command allows you to change the layout of plots
+created using the <a href="boxplot.html#boxplot">boxplot</a> plot style.
+
+   <p>Syntax:
+<pre class="example">           set style boxplot {range &lt;r&gt; | fraction &lt;f&gt;}
+                             {{no}outliers} {pointtype &lt;p&gt;}
+                             {candlesticks | financebars}
+                             {separation &lt;x&gt;}
+                             {labels off | auto | x | x2}
+                             {sorted | unsorted}
+     
+</pre>
+   <p>The box in the boxplot always spans the range of values from the first
+quartile to the third quartile of the data points.  The limit of the whiskers
+that extend from the box can be controlled in two different ways. By default
+the whiskers extend from each end of the box for a range equal to 1.5 times
+the interquartile range (i.e. the vertical height of the box proper). 
+Each whisker is truncated back toward the median so that it terminates at a
+y value belonging to some point in the data set. Since there may be no point
+whose value is exactly 1.5 times the interquartile distance, the whisker may
+be shorter than its nominal range.  This default corresponds to
+<pre class="example">           set style boxplot range 1.5
+     
+</pre>
+   <p>Alternatively, you can specify the fraction of the total number of points
+that the whiskers should span.  In this case the range is extended
+symmetrically from the median value until it encompasses the requested fraction
+of the data set.  Here again each whisker is constrained to end at a point in
+the data set.  To span 95% of the points in the set
+<pre class="example">           set style boxplot fraction 0.95
+     
+</pre>
+   <p>Any points that lie outside the range of the whiskers are considered outliers. 
+By default these are drawn as individual circles (pointtype 7).  The option
+`nooutliers` disables this.
+
+   <p>By default boxplots are drawn in a style similar to candlesticks, but you have
+the option of using instead a style similar to finance bars.
+
+   <p>If the using specification for a boxplot contains a fourth column, the values
+in that column will be interpreted as the discrete leveles of a factor
+variable.  In this case more than one boxplots may be drawn, as many as the
+number of levels of the factor variable.  These boxplots will be drawn next to
+each other, the distance between them is 1.0 by default (in x-axis units). 
+This distance can be changed by the option `separation`.
+
+   <p>The <a href="labels.html#labels">labels</a> option governs how and where these boxplots (each representing a
+part of the dataset) are labeled.  By default the value of the factor is put
+as a tick label on the horizontal axis &ndash; x or x2, depending on which one is
+used for the plot itself.  This setting corresponds to option `labels auto`. 
+The labels can be forced to use either of the x or x2 axes &ndash; options
+`labels x` and `labels x2`, respectively &ndash;, or they can be turned off
+altogether with the option `labels off`.
+
+   <p>By default the boxplots corresponding to different levels of the factor
+variable are not sorted; they will be drawn in the same order the levels are
+encountered in the data file. This behavior corresponds to the `unsorted`
+option. If the `sorted` option is active, the levels are first sorted
+alphabetically, and the boxplots are drawn in the sorted order.
+
+   <p>The `separation`, <a href="labels.html#labels">labels</a>, `sorted` and `unsorted` option only have an effect
+if a fourth column is given the plot specification.
+
+   <p>See <a href="boxplot.html#boxplot">boxplot</a>, <a href="candlesticks.html#candlesticks">candlesticks</a>, <a href="financebars.html#financebars">financebars</a>.
+
+   </body></html>
+

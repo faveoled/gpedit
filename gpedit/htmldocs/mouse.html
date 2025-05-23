@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+<title>mouse - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="set_002dshow.html#set_002dshow" title="set-show">
+<link rel="prev" href="margin.html#margin" title="margin">
+<link rel="next" href="multiplot.html#multiplot" title="multiplot">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="mouse"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="multiplot.html#multiplot">multiplot</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="margin.html#margin">margin</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="set_002dshow.html#set_002dshow">set-show</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.25.40 mouse</h4>
+
+<!-- ?commands set mouse -->
+<!-- ?commands unset mouse -->
+<!-- ?set mouse -->
+<!-- ?unset mouse -->
+<p><a name="index-mousing-512"></a>
+<a name="index-mouse-513"></a><a name="index-mouse-514"></a>
+
+   <p><a name="index-nomouse-515"></a>
+The command `set mouse` enables mouse actions for the current interactive
+terminal.  It is usually enabled by default in interactive mode, but disabled
+by default if commands are being read from a file.
+
+   <p>There are two mouse modes. The 2D mode works for `plot` commands and for `splot`
+maps (i.e. <a href="view.html#view">view</a> with z-rotation 0, 90, 180, 270 or 360 degrees, including
+`set view map`).  In this mode the mouse position is tracked and you can pan or
+zoom using the mouse buttons or arrow keys.  Some terminals support toggling
+individual plots on/off by clicking on the corresponding key title or on a
+separate widget.
+
+   <p>For 3D graphs `splot`, the view and scaling of the graph can be changed with
+mouse buttons 1 and 2, respectively. A vertical motion of Button 2 with the
+shift key held down changes the <a href="xyplane.html#xyplane">xyplane</a>.  If additionally to these
+buttons the modifier &lt;ctrl&gt; is held down, the coordinate axes are displayed
+but the data are suppressed.  This is useful for large data sets.
+
+   <p>Mousing is not available inside multiplot mode. When multiplot is completed
+using <a href="multiplot.html#multiplot">multiplot</a>, then the mouse will be turned on again but acts only
+on the most recent plot within the multiplot (like replot does).
+
+   <p>Syntax:
+<pre class="example">           set mouse {doubleclick &lt;ms&gt;} {nodoubleclick} \
+                     {{no}zoomcoordinates} \
+                     {noruler | ruler {at x,y}} \
+                     {polardistance{deg|tan} | nopolardistance} \
+                     {format &lt;string&gt;} \
+                     {clipboardformat &lt;int&gt;/&lt;string&gt;} \
+                     {mouseformat &lt;int&gt;/&lt;string&gt;} \
+                     {{no}labels {"labeloptions"}} \
+                     {{no}zoomjump} {{no}verbose}
+           unset mouse
+     
+</pre>
+   <p>The options `noruler` and `ruler` switch the ruler off and on, the latter
+optionally setting the origin at the given coordinates. While the ruler is on,
+the distance in user units from the ruler origin to the mouse is displayed
+continuously. By default, toggling the ruler has the key binding 'r'.
+
+   <p>The option `polardistance` determines if the distance between the mouse cursor
+and the ruler is also shown in polar coordinates (distance and angle in
+degrees or tangent (slope)). This corresponds to the default key binding '5'.
+
+   <p><a name="index-labels-516"></a>
+Choose the option <a href="labels.html#labels">labels</a> to define persistent gnuplot labels using Button 2. 
+The default is `nolabels`, which makes Button 2 draw only a temporary label at
+the mouse position. Labels are drawn with the current setting of <a href="mouseformat.html#mouseformat">mouseformat</a>. 
+The `labeloptions` string is passed to the `set label` command.  The default is
+"point pointstyle 1" which will plot a small plus at the label position. 
+Temporary labels will disappear at the next <a href="replot.html#replot">replot</a> or mouse zoom operation. 
+Persistent labels can be removed by holding the Ctrl-Key down while clicking
+Button 2 on the label's point. The threshold for how close you must be to the
+label is also determined by the <a href="pointsize.html#pointsize">pointsize</a>.
+
+   <p>If the option `verbose` is turned on the communication commands are shown
+during execution. This option can also be toggled by hitting `6` in the
+driver's window. `verbose` is off by default.
+
+   <p>Press 'h' in the driver's window for a short summary of the mouse and key
+bindings.  This will also display user defined bindings or `hotkeys` which
+can be defined using the `bind` command, see help for `bind`.  Note, that user
+defined `hotkeys` may override the default bindings. 
+See also help for `bind` and `label`.
+
+<ul class="menu">
+<li><a accesskey="1" href="doubleclick.html#doubleclick">doubleclick</a>
+<li><a accesskey="2" href="mouseformat.html#mouseformat">mouseformat</a>
+<li><a accesskey="3" href="scrolling.html#scrolling">scrolling</a>
+<li><a accesskey="4" href="X11_005fmouse.html#X11_005fmouse">X11_mouse</a>
+<li><a accesskey="5" href="zoom.html#zoom">zoom</a>
+</ul>
+
+   </body></html>
+

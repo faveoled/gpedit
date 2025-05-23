@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+<title>scanorder - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="pm3d.html#pm3d" title="pm3d">
+<link rel="prev" href="position.html#position" title="position">
+<link rel="next" href="clipping.html#clipping" title="clipping">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="scanorder"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="clipping.html#clipping">clipping</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="position.html#position">position</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="pm3d.html#pm3d">pm3d</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.53.3 scanorder</h5>
+
+<!-- ?pm3d scanorder -->
+<!-- ?pm3d depthorder -->
+<!-- ?pm3d flush -->
+<p><a name="index-depthorder-558"></a>
+<a name="index-flush-559"></a>
+<a name="index-scansforward-560"></a>
+<a name="index-scansbackward-561"></a>
+<a name="index-scansautomatic-562"></a>
+<a name="index-depthorder-563"></a>
+By default the quadrangles making up a pm3d solid surface are rendered in the
+order they are encountered along the surface grid points.  This order may be
+controlled by the options `scansautomatic`|`scansforward`|`scansbackward`. 
+These scan options are not in general compatible with hidden-surface removal.
+
+   <p>If two successive scans do not have same number of points, then it has to be
+decided whether to start taking points for quadrangles from the beginning of
+both scans (`flush begin`), from their ends (`flush end`) or to center them
+(`flush center`).  Note, that `flush (center|end)` are incompatible with
+`scansautomatic`: if you specify `flush center` or `flush end` and
+`scansautomatic` is set, it is silently switched to `scansforward`.
+
+   <p>If two subsequent scans do not have the same number of points, the option
+`ftriangles` specifies whether color triangles are drawn at the scan tail(s)
+where there are not enough points in either of the scan. This can be used to
+draw a smooth map boundary.
+
+   <p>Gnuplot does not do true hidden surface removal for solid surfaces, but often
+it is sufficient to render the component quadrangles in order from furthest
+to closest.  This mode may be selected using the options
+<pre class="example">           set pm3d depthorder hidden3d
+</pre>
+   <p>The `depthorder` option orders the solid quadrangles; the <a href="hidden3d.html#hidden3d">hidden3d</a> option
+similarly orders the bounding lines (if drawn).  Note that the global option
+<a href="hidden3d.html#hidden3d">hidden3d</a> does not affect pm3d surfaces.
+
+   </body></html>
+

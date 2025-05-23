@@ -1,0 +1,131 @@
+<html lang="en">
+<head>
+<title>time/date_specifiers - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="format_005f.html#format_005f" title="format_">
+<link rel="prev" href="format_005fspecifiers.html#format_005fspecifiers" title="format_specifiers">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="time%2fdate_specifiers"></a>
+<a name="time_002fdate_005fspecifiers"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="format_005fspecifiers.html#format_005fspecifiers">format_specifiers</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="format_005f.html#format_005f">format_</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.23.3 time/date specifiers</h5>
+
+<!-- ?commands set format date_specifiers -->
+<!-- ?commands set format time_specifiers -->
+<!-- ?set format date_specifiers -->
+<!-- ?set format time_specifiers -->
+<!-- ?set date_specifiers -->
+<!-- ?set time_specifiers -->
+<p><a name="index-date_005fspecifiers-475"></a>
+<a name="index-time_005fspecifiers-476"></a>
+In time/date mode, the acceptable formats are:
+
+<pre class="example">           Format       Explanation
+           %a           abbreviated name of day of the week
+           %A           full name of day of the week
+           %b or %h     abbreviated name of the month
+           %B           full name of the month
+           %d           day of the month, 01--31
+           %D           shorthand for "%m/%d/%y" (only output)
+           %F           shorthand for "%Y-%m-%d" (only output)
+           %k           hour, 0--23 (one or two digits)
+           %H           hour, 00--23 (always two digits)
+           %l           hour, 1--12 (one or two digits)
+           %I           hour, 01--12 (always two digits)
+           %j           day of the year, 1--366
+           %m           month, 01--12
+           %M           minute, 0--60
+           %p           "am" or "pm"
+           %r           shorthand for "%I:%M:%S %p" (only output)
+           %R           shorthand for "%H:%M" (only output)
+           %s           number of seconds since the start of year 2000
+           %S           second, integer 0--60 on output, (double) on input
+           %T           shorthand for "%H:%M:%S" (only output)
+           %U           week of the year (week starts on Sunday)
+           %w           day of the week, 0--6 (Sunday = 0)
+           %W           week of the year (week starts on Monday)
+           %y           year, 0-68 for 2000-2068, 69-99 for 1969-1999
+           %Y           year, 4-digit
+     
+</pre>
+   <!-- ^<table align="center" border="1" rules="groups" frame="hsides" cellpadding="3"> -->
+<!-- ^<colgroup> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="left"> -->
+<!-- ^</colgroup> -->
+<!-- ^<thead> -->
+<!-- ^<tr>    <th>Format</th>    <th>Explanation</th></tr> -->
+<!-- ^</thead> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <td><tt>%a</tt></td>    <td>abbreviated name of day of the week</td></tr> -->
+<!-- ^<tr>    <td><tt>%A</tt></td>    <td>full name of day of the week</td></tr> -->
+<!-- ^<tr>    <td><tt>%b</tt> or <tt>%h</tt></td>    <td>abbreviated name of the month</td></tr> -->
+<!-- ^<tr>    <td><tt>%B</tt></td>    <td>full name of the month</td></tr> -->
+<!-- ^<tr>    <td><tt>%d</tt></td>    <td>day of the month, 01&ndash;31</td></tr> -->
+<!-- ^<tr>    <td><tt>%D</tt></td>    <td>shorthand for <tt>%m/%d/%y</tt> (only output)</td></tr> -->
+<!-- ^<tr>    <td><tt>%F</tt></td>    <td>shorthand for <tt>%Y-%m-%d</tt> (only output)</td></tr> -->
+<!-- ^<tr>    <td><tt>%k</tt></td>    <td>hour, 0&ndash;23 (one or two digits)</td></tr> -->
+<!-- ^<tr>    <td><tt>%H</tt></td>    <td>hour, 00&ndash;23 (always two digits)</td></tr> -->
+<!-- ^<tr>    <td><tt>%l</tt></td>    <td>hour, 1&ndash;12 (one or two digits)</td></tr> -->
+<!-- ^<tr>    <td><tt>%I</tt></td>    <td>hour, 01&ndash;12 (always two digits)</td></tr> -->
+<!-- ^<tr>    <td><tt>%j</tt></td>    <td>day of the year, 1&ndash;366</td></tr> -->
+<!-- ^<tr>    <td><tt>%m</tt></td>    <td>month, 01&ndash;12</td></tr> -->
+<!-- ^<tr>    <td><tt>%M</tt></td>    <td>minute, 0&ndash;60</td></tr> -->
+<!-- ^<tr>    <td><tt>%p</tt></td>    <td>"am" or "pm"</td></tr> -->
+<!-- ^<tr>    <td><tt>%r</tt></td>    <td>shorthand for <tt>%I:%M:%S %p</tt> (only output)</td></tr> -->
+<!-- ^<tr>    <td><tt>%R</tt></td>    <td>shorthand for <tt>%H:%M</tt> (only output)</td></tr> -->
+<!-- ^<tr>    <td><tt>%S</tt></td>    <td>second, integer 0&ndash;60 on output, (double) on input</td></tr> -->
+<!-- ^<tr>    <td><tt>%s</tt></td>    <td>number of seconds since start of year 2000</td></tr> -->
+<!-- ^<tr>    <td><tt>%T</tt></td>    <td>shorthand for <tt>%H:%M:%S</tt> (only output)</td></tr> -->
+<!-- ^<tr>    <td><tt>%U</tt></td>    <td>week of the year (week starts on Sunday)</td></tr> -->
+<!-- ^<tr>    <td><tt>%w</tt></td>    <td>day of the week, 0&ndash;6 (Sunday = 0)</td></tr> -->
+<!-- ^<tr>    <td><tt>%W</tt></td>    <td>week of the year (week starts on Monday)</td></tr> -->
+<!-- ^<tr>    <td><tt>%y</tt></td>    <td>year, 0-99 in range 1969-2068</td></tr> -->
+<!-- ^<tr>    <td><tt>%Y</tt></td>    <td>year, 4-digit</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^</table> -->
+   <p>Except for the non-numerical formats, these may be preceded by a "0" ("zero",
+not "oh") to pad the field length with leading zeroes, and a positive digit,
+to define the minimum field width (which will be overridden if the specified
+width is not large enough to contain the number).  The %S format also accepts
+a precision specifier so that fractional seconds can be written. 
+There is a 24-character limit to the length of the printed text;
+longer strings will be truncated.
+
+   <p>Examples:
+
+   <p>Suppose the text is "76/12/25 23:11:11".  Then
+<pre class="example">           set format x                 # defaults to "12/25/76" \n "23:11"
+           set format x "%A, %d %b %Y"  # "Saturday, 25 Dec 1976"
+           set format x "%r %D"         # "11:11:11 pm 12/25/76"
+     
+</pre>
+   <p>Suppose the text is "98/07/06 05:04:03.123456".  Then
+<pre class="example">           set format x "%1y/%2m/%3d %01H:%02M:%06.3S"  # "98/ 7/  6 5:04:03.123"
+     
+</pre>
+   </body></html>
+

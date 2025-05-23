@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+<title>algorithm - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="pm3d.html#pm3d" title="pm3d">
+<link rel="prev" href="pm3d.html#pm3d" title="pm3d">
+<link rel="next" href="position.html#position" title="position">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="algorithm"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="position.html#position">position</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="pm3d.html#pm3d">pm3d</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="pm3d.html#pm3d">pm3d</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.53.1 algorithm</h5>
+
+<!-- ?pm3d algorithm -->
+<p>Let us first describe how a map/surface is drawn.  The input data come from an
+evaluated function or from an `splot data file`.  Each surface consists of a
+sequence of separate scans (isolines).  The pm3d algorithm fills the region
+between two neighbouring points in one scan with another two points in the
+next scan by a gray (or color) according to z-values (or according to an
+additional 'color' column, see help for <a href="using.html#using">using</a>) of these 4 corners; by default
+the 4 corner values are averaged, but this can be changed by the option
+`corners2color`.  In order to get a reasonable surface, the neighbouring scans
+should not cross and the number of points in the neighbouring scans should not
+differ too much; of course, the best plot is with scans having same number of
+points.  There are no other requirements (e.g. the data need not be gridded). 
+Another advantage is that the pm3d algorithm does not draw anything outside of
+the input (measured or calculated) region.
+
+   <p>Surface coloring works with the following input data:
+
+   <p>1. splot of function or of data file with one or three data columns: The
+gray/color scale is obtained by mapping the averaged (or `corners2color`)
+z-coordinate of the four corners of the above-specified quadrangle into the
+range [min_color_z,max_color_z] of <a href="zrange.html#zrange">zrange</a> or <a href="cbrange.html#cbrange">cbrange</a> providing a gray value
+in the range [0:1].  This value can be used directly as the gray for gray maps. 
+The normalized gray value can be further mapped into a color&mdash;see <a href="palette.html#palette">palette</a>
+for the complete description.
+
+   <p>2. splot of data file with two or four data columns: The gray/color value is
+obtained by using the last-column coordinate instead of the z-value, thus
+allowing the color and the z-coordinate be mutually independent.  This can be
+used for 4d data drawing.
+
+   <p>Other notes:
+
+   <p>1. The term 'scan' referenced above is used more among physicists than the
+term 'iso_curve' referenced in gnuplot documentation and sources.  You measure
+maps recorded one scan after another scan, that's why.
+
+   <p>2. The 'gray' or 'color' scale is a linear mapping of a continuous variable
+onto a smoothly varying palette of colors. The mapping is shown in a
+rectangle next to the main plot. This documentation refers to this as a
+"colorbox", and refers to the indexing variable as lying on the colorbox axis. 
+See `set colorbox`, <a href="cbrange.html#cbrange">cbrange</a>.
+
+   <p>3. To use pm3d coloring to generate a two-dimensional plot rather than a 3D
+surface, use `set view map` or `set pm3d map`.
+
+   </body></html>
+

@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+<title>set_style_ellipse - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="style.html#style" title="style">
+<link rel="prev" href="set_005fstyle_005frectangle.html#set_005fstyle_005frectangle" title="set_style_rectangle">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="set_style_ellipse"></a>
+<a name="set_005fstyle_005fellipse"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="set_005fstyle_005frectangle.html#set_005fstyle_005frectangle">set_style_rectangle</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="style.html#style">style</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.66.10 set style ellipse</h5>
+
+<!-- ?commands set style ellipse -->
+<!-- ?commands show style ellipse -->
+<!-- ?set style ellipse -->
+<!-- ?unset style ellipse -->
+<!-- ?show style ellipse -->
+<p>Syntax:
+<pre class="example">           set style ellipse {units xx|xy|yy}
+                             {size {graph|screen} &lt;a&gt;, {{graph|screen} &lt;b&gt;}}
+                             {angle &lt;angle&gt;}
+     
+</pre>
+   <p>This command governs whether the diameters of ellipses are interpreted in
+the same units or not. 
+Default is `xy`, which means that the major diameter (first axis) of
+ellipses will be interpreted in the same units as the x (or x2) axis,
+while the minor (second) diameter in those of the y (or y2) axis. 
+In this mode the ratio of the ellipse axes depends on the scales of the
+plot axes and aspect ratio of the plot.  When set to `xx` or `yy`,
+both axes of all ellipses will be interpreted in the same units. 
+This means that the ratio of the axes of the plotted ellipses will be
+correct even after rotation, but either their vertical or horizontal extent
+will not be correct.
+
+   <p>This is a global setting that affects all ellipses, both those defined as
+objects and those generated with the `plot` command, however, the value of
+`units` can also be redefined on a per-plot and per-object basis.
+
+   <p>It is also possible to set a default size for ellipses with the <a href="size.html#size">size</a>
+keyword.  This default size applies to data plots with only
+2 columns of data (x,y) and to function plots.  The two values are
+interpreted as the major and minor diameters (as opposed to semi-major
+and semi-minor axes) of the ellipse.
+
+   <p>The default is "set style ellipse size graph 0.05,0.03".
+
+   <p>Last, but not least it is possible to set the default orientation with the
+`angle` keyword. The orientation, which is defined as the angle between the
+major axis of the ellipse and the plot's x axis, must be given in degrees.
+
+   <p>For defining ellipse objects, see `set object ellipse`;
+for the 2D plot style, see <a href="ellipses.html#ellipses">ellipses</a>.
+
+   </body></html>
+

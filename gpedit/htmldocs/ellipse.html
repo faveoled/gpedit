@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+<title>ellipse - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="object.html#object" title="object">
+<link rel="prev" href="rectangle.html#rectangle" title="rectangle">
+<link rel="next" href="circle.html#circle" title="circle">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="ellipse"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="circle.html#circle">circle</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="rectangle.html#rectangle">rectangle</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="object.html#object">object</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.47.2 ellipse</h5>
+
+<p><a name="index-ellipse-543"></a>
+<!-- ?commands set object ellipse -->
+<!-- ?commands show object ellipse -->
+<!-- ?set object ellipse -->
+<!-- ?show object ellipse -->
+Syntax:
+<pre class="example">         set object &lt;index&gt; ellipse {at|center} &lt;position&gt; size &lt;w&gt;,&lt;h&gt;
+             {angle &lt;orientation&gt;} {units xy|xx|yy}
+             {&lt;other-object-properties&gt;}
+     
+</pre>
+   <p>The position of the ellipse is specified by giving the center followed by
+the width and the height (actually the major and minor axes). The keywords
+`at` and `center` are synonyms.  The center position may be given in axis,
+graph, or screen coordinates. See `coordinates`. The major and minor axis
+lengths must be given in axis coordinates.  The orientation of the ellipse
+is specified by the angle between the horizontal axis and the major diameter
+of the ellipse.  If no angle is given, the default ellipse orientation
+will be used instead (see `set style ellipse`).  The `units` keyword
+controls the scaling of the axes of the ellipse. `units xy` means that the
+major axis is interpreted in terms of units along the x axis, while the
+minor axis in that of the y axis. `units xx` means that both axes of the
+ellipses are scaled in the units of the x axis, while `units yy` means
+that both axes are in units of the y axis. 
+The default is `xy` or whatever `set style ellipse units` was set to.
+
+   <p>NB: If the x and y axis scales are not equal, (e.g. `units xy` is in
+effect) then the major/minor axis ratio will no longer be correct after
+rotation.
+
+   <p>Note that `set object ellipse size &lt;2r&gt;,&lt;2r&gt;` does not in general produce
+the same result as `set object circle &lt;r&gt;`.  The circle radius is always
+interpreted in terms of units along the x axis, and will always produce a
+circle even if the x and y axis scales are different and even if the aspect
+ratio of your plot is not 1.  If `units` is set to `xy`, then
+'set object ellipse' interprets the first &lt;2r&gt; in terms of x axis units
+and the second &lt;2r&gt; in terms of y axis units. This will only produce a
+circle if the x and y axis scales are identical and the plot aspect ratio
+is 1.  On the other hand, if `units` is set to `xx` or `yy`, then the
+diameters specified in the 'set object' command will be interpreted in the
+same units, so the ellipse will have the correct aspect ratio, and it will
+maintain its aspect ratio even if the plot is resized.
+
+   </body></html>
+

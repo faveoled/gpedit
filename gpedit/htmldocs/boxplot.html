@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+<title>boxplot - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="plotting_005fstyles.html#plotting_005fstyles" title="plotting_styles">
+<link rel="prev" href="boxes.html#boxes" title="boxes">
+<link rel="next" href="boxxyerrorbars.html#boxxyerrorbars" title="boxxyerrorbars">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="boxplot"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="boxxyerrorbars.html#boxxyerrorbars">boxxyerrorbars</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="boxes.html#boxes">boxes</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="plotting_005fstyles.html#plotting_005fstyles">plotting_styles</a>
+<hr>
+</div>
+
+<h3 class="section">2.3 boxplot</h3>
+
+<!-- ?plotting styles boxplot -->
+<!-- ?style boxplot -->
+<p><a name="index-boxplot-256"></a>
+Boxplots are a common way to represent a statistical distribution of values. 
+Quartile boundaries are determined such that 1/4 of the points have a value
+equal or less than the first quartile boundary, 1/2 of the points have a value
+equal or less than the second quartile (median) value, etc.  A box is drawn
+around the region between the first and third quartiles, with a horizontal line
+at the median value.  Whiskers extend from the box to user-specified limits. 
+Points that lie outside these limits are drawn individually.
+
+   <p>Examples
+
+<pre class="example">         # Place a boxplot at x coordinate 1.0 representing the y values in column 5
+         plot 'data' using (1.0):5
+     
+</pre>
+   <pre class="example">         # Same plot but suppress outliers and force the width of the boxplot to 0.3
+         set style boxplot nooutliers
+         plot 'data' using (1.0):5:(0.3)
+     
+</pre>
+   <p>By default only one boxplot is produced that represents all y values from the
+second column of the using specification. However, an additional (fourth)
+colunm can be added to the specification. If present, the values of that
+column will be interpreted as the discrete levels of a factor variable. 
+As many boxplots will be drawn as there are levels in the factor variable. 
+The separation between these boxplots is 1.0 by default, but it can be changed
+by `set style boxplot separation`. By default, the value of the factor variable
+is shown as a tic label below (or above) each boxplot.
+
+   <p>Example
+
+<pre class="example">         # Suppose that column 2 of 'data' contains either "control" or "treatment"
+         # The following example produces two boxplots, one for each level of the
+         # factor
+         plot 'data' using (1.0):5:(0):2
+     
+</pre>
+   <p>The default width of the box can be set via `set boxwidth &lt;width&gt;` or may be
+specified as an optional 3rd column in the <a href="using.html#using">using</a> clause of the plot command. 
+The first and third columns (x coordinate and width) are normally provided as
+constants rather than as data columns.
+
+   <p>By default the whiskers extend from the ends of the box to the most distant
+point whose y value lies within 1.5 times the interquartile range. By default
+outliers are drawn as circles (point type 7).  The width of the bars at the
+end of the whiskers may be controlled using <a href="bars.html#bars">bars</a>.
+
+   <p>These default properties may be changed using the <a href="boxplot.html#boxplot">boxplot</a> command. 
+See <a href="boxplot.html#boxplot">boxplot</a>, <a href="bars.html#bars">bars</a>, <a href="boxwidth.html#boxwidth">boxwidth</a>, `fillstyle`, <a href="candlesticks.html#candlesticks">candlesticks</a>.
+
+   </body></html>
+

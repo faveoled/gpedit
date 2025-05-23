@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+<title>stats_(Statistical_Summary) - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Commands.html#Commands" title="Commands">
+<link rel="prev" href="splot.html#splot" title="splot">
+<link rel="next" href="system_005f.html#system_005f" title="system_">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="stats_(Statistical_Summary)"></a>
+<a name="stats_005f_0028Statistical_005fSummary_0029"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="system_005f.html#system_005f">system_</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="splot.html#splot">splot</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Commands.html#Commands">Commands</a>
+<hr>
+</div>
+
+<h3 class="section">3.28 stats (Statistical Summary)</h3>
+
+<!-- ?commands stats -->
+<p><a name="index-stats-761"></a>
+<a name="index-statistics-762"></a>
+Syntax:
+<pre class="example">          stats 'filename' [using N[:M]] [name 'prefix'] [[no]output]]
+</pre>
+   <p>This command prepares a statistical summary of the data in one or two columns
+of a file. The using specifier is interpreted in the same way as for plot
+commands. See `plot` for details on the <a href="index.html#index">index</a>, <a href="every.html#every">every</a>, and <a href="using.html#using">using</a>
+directives. Data points are filtered against both xrange and yrange before
+analysis. See <a href="xrange.html#xrange">xrange</a>. The summary is printed to the screen by default. 
+Output can be redirected to a file by prior use of the command <a href="print.html#print">print</a>,
+or suppressed altogether using the `nooutput` option.
+
+   <p>In addition to printed output, the program stores the individual statistics
+into three sets of variables. 
+The first set of variables reports how the data is laid out in the file:
+<pre class="example">          STATS_records           # total number of in-range data records
+          STATS_outofrange        # number of records filtered out by range limits
+          STATS_invalid           # number of invalid/incomplete/missing records
+          STATS_blank             # number of blank lines in the file
+          STATS_blocks            # number of indexable data blocks in the file
+     
+</pre>
+   <p>The second set reports properties of the in-range data from a single column. 
+If the corresponding axis is autoscaled (x-axis for the 1st column, y-axis
+for the optional second column) then no range limits are applied. If two
+columns are being analysed in a single `stats` command, the the suffix "_x"
+or "_y" is appended to each variable name.  I.e. STATS_min_x is the minimum
+value found in the first column, while STATS_min_y is the minimum value found
+in the second column.
+<pre class="example">          STATS_min               # minimum value of in-range data points
+          STATS_max               # maximum value of in-range data points
+          STATS_index_min         # index i for which data[i] == STATS_min
+          STATS_index_max         # index i for which data[i] == STATS_max
+          STATS_lo_quartile       # value of the lower (1st) quartile boundary
+          STATS_median            # median value
+          STATS_up_quartile       # value of the upper (3rd) quartile boundary
+          STATS_mean              # mean value of in-range data points
+          STATS_stddev            # standard deviation of the in-range data points
+          STATS_sum               # sum
+          STATS_sumsq             # sum of squares
+     
+</pre>
+   <p>The third set of variables is only relevant to analysis of two data columns.
+<pre class="example">          STATS_correlation       # correlation coefficient between x and y values
+          STATS_slope             # A corresponding to a linear fit y = Ax + B
+          STATS_intercept         # B corresponding to a linear fit y = Ax + B
+          STATS_sumxy             # sum of x*y
+          STATS_pos_min_y         # x coordinate of a point with minimum y value
+          STATS_pos_max_y         # x coordinate of a point with maximum y value
+     
+</pre>
+   <p>It may be convenient to track the statistics from more than one file at the
+same time. The `name` option causes the default prefix "STATS" to be replaced
+by a user-specified string.  For example, the mean value of column 2 data from
+two different files could be compared by
+<pre class="example">          stats "file1.dat" using 2 name "A"
+          stats "file2.dat" using 2 name "B"
+          if (A_mean &lt; B_mean) {...}
+     
+</pre>
+   <p>The index reported in STATS_index_xxx corresponds to the value of pseudo-column
+0 ($0) in plot commands.  I.e. the first point has index 0, the last point
+has index N-1.
+
+   <p>Data values are sorted to find the median and quartile boundaries. 
+If the total number of points N is odd, then the median value is taken as the
+value of data point (N+1)/2. If N is even, then the median is reported as the
+mean value of points N/2 and (N+2)/2. Equivalent treatment is used for the
+quartile boundaries.
+
+   <p>For an example of using the `stats` command to help annotate a subsequent plot,
+see
+<a href="http://www.gnuplot.info/demo/stats.html">stats.dem.</a>
+
+   <p>The current implementation does not allow analysis if either the X or Y axis is
+set to log-scaling.  This restriction may be removed in a later version.
+
+   </body></html>
+

@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+<title>circles - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="plotting_005fstyles.html#plotting_005fstyles" title="plotting_styles">
+<link rel="prev" href="candlesticks.html#candlesticks" title="candlesticks">
+<link rel="next" href="ellipses.html#ellipses" title="ellipses">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="circles"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="ellipses.html#ellipses">ellipses</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="candlesticks.html#candlesticks">candlesticks</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="plotting_005fstyles.html#plotting_005fstyles">plotting_styles</a>
+<hr>
+</div>
+
+<h3 class="section">2.6 circles</h3>
+
+<!-- ?commands set style circles -->
+<!-- ?set style circles -->
+<!-- ?plotting styles circles -->
+<!-- ?style circles -->
+<p><a name="index-circles-259"></a>
+The <a href="circles.html#circles">circles</a> style plots a circle with an explicit radius at each data point. 
+If three columns of data are present, they are interpreted as x, y, radius. 
+The radius is always interpreted in the units of the plot's horizontal axis
+(x or x2).  The scale on y and the aspect ratio of the plot are both ignored. 
+If only two columns are present, the radius is taken from `set style circle`. 
+In this case the radius may be given in graph or screen coordinates. 
+By default a full circle will be drawn.  It is possible to plot arc segments
+instead of full circles by specifying a start and end angle in the 4th and 5th
+columns.  An optional 4th or 6th column can specify per-circle color. 
+The start and end angles of the circle segments must be specified in degrees.
+
+   <p>Examples:
+
+<pre class="example">         # draws circles whose area is proportional to the value in column 3
+         set style fill transparent solid 0.2 noborder
+         plot 'data' using 1:2:(sqrt($3)) with circles, \
+              'data' using 1:2 with linespoints
+     
+</pre>
+   <pre class="example">         # draws Pac-men instead of circles
+         plot 'data' using 1:2:(10):(40):(320) with circles
+     
+</pre>
+   <pre class="example">         # draw a pie chart with inline data
+         set xrange [-15:15]
+         set style fill transparent solid 0.9 noborder
+         plot '-' using 1:2:3:4:5:6 with circles lc var
+         0    0    5    0    30    1
+         0    0    5   30    70    2
+         0    0    5   70   120    3
+         0    0    5  120   230    4
+         0    0    5  230   360    5
+         e
+     
+</pre>
+   <p>The result is similar to using a `points` plot with variable size points and
+pointstyle 7, except that the circles will scale with the x axis range. 
+See also `set object circle` and `fillstyle`.
+
+   </body></html>
+

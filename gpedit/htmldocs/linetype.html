@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<title>linetype - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="set_002dshow.html#set_002dshow" title="set-show">
+<link rel="prev" href="label.html#label" title="label">
+<link rel="next" href="lmargin.html#lmargin" title="lmargin">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="linetype"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="lmargin.html#lmargin">lmargin</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="label.html#label">label</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="set_002dshow.html#set_002dshow">set-show</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.25.32 linetype</h4>
+
+<!-- ?commands set linetype -->
+<!-- ?commands unset linetype -->
+<!-- ?commands show linetype -->
+<!-- ?set linetype -->
+<!-- ?unset linetype -->
+<!-- ?show linetype -->
+<p><a name="index-linetype-496"></a><a name="index-linetype-497"></a>
+
+   <p>The `set linetype` command allows you to redefine the basic linetypes used
+for plots.  The command options are identical to those for "set style line". 
+Unlike line styles, redefinitions by `set linetype` are persistent;  they
+are not affected by <a href="reset.html#reset">reset</a>.
+
+   <p>For example, linetypes one and two default to red and green. If you redefine
+them like this:
+
+<pre class="example">           set linetype 1 lw 2 lc rgb "blue" pointtype 6
+           set linetype 2 lw 2 lc rgb "forest-green" pointtype 8
+     
+</pre>
+   <p>everywhere that uses lt 1 will now get a thick blue line rather than a thin red
+line (the previous default meaning of lt 1).  This includes uses such as the
+definition of a temporary linestyle derived from the base linetype 1.
+
+   <p>`Note`: This command is new to gnuplot version 4.6.  It supersedes a rather
+cryptic command in version 4.2 "set style increment user". 
+The older command is now deprecated.
+
+   <p>This mechanism can be used to define a set of personal preferences for the
+sequence of lines used in gnuplot.  The recommended way to do this is to add
+to the run-time initialization file ~/.gnuplot a sequence of commands like
+
+<pre class="example">           if ((GPVAL_VERSION &lt; 4.5) \
+           ||  (!strstrt(GPVAL_COMPILE_OPTIONS,"+USER_LINETYPES"))) \
+               exit
+           set linetype 1 lc rgb "dark-violet" lw 2 pt 0
+           set linetype 2 lc rgb "sea-green"   lw 2 pt 7
+           set linetype 3 lc rgb "cyan"        lw 2 pt 6 pi -1
+           set linetype 4 lc rgb "dark-red"    lw 2 pt 5 pi -1
+           set linetype 5 lc rgb "blue"        lw 2 pt 8
+           set linetype 6 lc rgb "dark-orange" lw 2 pt 3
+           set linetype 7 lc rgb "black"       lw 2 pt 11
+           set linetype 8 lc rgb "goldenrod"   lw 2
+           set linetype cycle 8
+     
+</pre>
+   <p>Every time you run gnuplot the line types will be initialized to these values. 
+You may initialize as many linetypes as you like. If you do not redefine, say,
+linetype 3 then it will continue to have the default properties (in this case
+blue, pt 3, lw 1, etc).  The first few lines of the example script insure that
+the commands will be skipped by older versions of gnuplot.
+
+   <p>Similar script files can be used to define theme-based color choices, or sets
+of colors optimized for a particular plot type or output device.
+
+   <p><a name="index-cycle-498"></a>
+The command `set linetype cycle 8` tells gnuplot to re-use these definitions
+for the color and linewidth of higher-numbered linetypes.  That is, linetypes
+9-16, 17-24, and so on will use this same sequence of colors and widths. 
+The point properties (pointtype, pointsize, pointinterval) are not affected by
+this command.  `unset linetype cycle` disables this feature.  If the line
+properties of a higher numbered linetype are explicitly defined, this takes
+precedence over the recycled low-number linetype properties.
+
+   </body></html>
+

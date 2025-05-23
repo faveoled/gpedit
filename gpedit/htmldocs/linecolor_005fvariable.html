@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+<title>linecolor_variable - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="colorspec.html#colorspec" title="colorspec">
+<link rel="prev" href="background_005fcolor.html#background_005fcolor" title="background_color">
+<link rel="next" href="rgbcolor_005fvariable.html#rgbcolor_005fvariable" title="rgbcolor_variable">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="linecolor_variable"></a>
+<a name="linecolor_005fvariable"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="rgbcolor_005fvariable.html#rgbcolor_005fvariable">rgbcolor_variable</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="background_005fcolor.html#background_005fcolor">background_color</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="colorspec.html#colorspec">colorspec</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">1.17.1.2 linecolor variable</h5>
+
+<!-- ?linecolor variable -->
+<!-- ?lc variable -->
+<!-- ?textcolor variable -->
+<!-- ?tc variable -->
+<p>`lc variable` tells the program to use the value read from one column of the
+input data as a linetype index, and use the color belonging to that linetype. 
+This requires a corresponding additional column in the <a href="using.html#using">using</a> specifier. 
+Text colors can be set similarly using `tc variable`.
+
+   <p>Examples:
+<pre class="example">           # Use the third column of data to assign colors to individual points
+           plot 'data' using 1:2:3 with points lc variable
+     
+</pre>
+   <pre class="example">           # A single data file may contain multiple sets of data, separated by two
+           # blank lines.  Each data set is assigned as index value (see <a href="index.html#index">index</a>)
+           # that can be retrieved via the <a href="using.html#using">using</a> specifier `column(-2)`.
+           # See `pseudocolumns`.  This example uses to value in column -2 to
+           # draw each data set in a different line color.
+           plot 'data' using 1:2:(column(-2)) with lines lc variable
+     
+</pre>
+   </body></html>
+

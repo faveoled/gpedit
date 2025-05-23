@@ -1,0 +1,136 @@
+<html lang="en">
+<head>
+<title>matrix - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="data_002dfile.html#data_002dfile" title="data-file">
+<link rel="prev" href="data_002dfile.html#data_002dfile" title="data-file">
+<link rel="next" href="example_005fdatafile_005f.html#example_005fdatafile_005f" title="example_datafile_">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="matrix"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="example_005fdatafile_005f.html#example_005fdatafile_005f">example_datafile_</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="data_002dfile.html#data_002dfile">data-file</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="data_002dfile.html#data_002dfile">data-file</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.27.1.1 matrix</h5>
+
+<!-- ?commands plot datafile matrix -->
+<!-- ?commands splot datafile matrix -->
+<!-- ?plot datafile matrix binary -->
+<!-- ?splot datafile matrix binary -->
+<!-- ?plot binary matrix -->
+<!-- ?splot binary matrix -->
+<!-- ?plot matrix binary -->
+<!-- ?splot matrix binary -->
+<!-- ?matrix binary -->
+<!-- ?binary matrix -->
+<p>Gnuplot can interpret matrix input in two different ways. 
+The first of these assumes a uniform grid of x and y coordinates, and assigns
+each value in the input matrix to one element of this uniform grid. 
+This is the default for ascii data input, but not for binary input. 
+Example commands for plotting uniform matrix data:
+<pre class="example">          splot 'file' matrix using 1:2:3          # ascii input
+          splot 'file' binary general using 1:2:3  # binary input
+     
+</pre>
+   <p>In a uniform grid matrix the z-values are read in a row at a time, i. e.,
+<pre class="example">         z11 z12 z13 z14 ...
+         z21 z22 z23 z24 ...
+         z31 z32 z33 z34 ...
+</pre>
+   <p>and so forth.
+
+   <p>For ascii input, a blank line or comment line ends the matrix, and starts a new
+surface mesh.  You can select among the meshes inside a file by the <a href="index.html#index">index</a>
+option to the `splot` command, as usual. 
+<a name="index-nonuniform-759"></a>
+The second interpretation assumes a non-uniform grid with explicit x and y
+coordinates. The first row of input data contains the y coordinates;
+the first column of input data contains the x coordinates.  For binary input
+data, the first element of the first row must contain the number of data
+columns. (This number is ignored for ascii input).  Both the coordinates and
+the data values in a binary input are treated as single precision floats. 
+Example commands for plotting non-uniform matrix data:
+<pre class="example">          splot 'file' nonuniform matrix using 1:2:3  # ascii input
+          splot 'file' binary matrix using 1:2:3      # binary input
+     
+</pre>
+   <p>Thus the data organization for non-uniform matrix input is
+
+<pre class="example">           &lt;N+1&gt;  &lt;y0&gt;   &lt;y1&gt;   &lt;y2&gt;  ...  &lt;yN&gt;
+            &lt;x0&gt; &lt;z0,0&gt; &lt;z0,1&gt; &lt;z0,2&gt; ... &lt;z0,N&gt;
+            &lt;x1&gt; &lt;z1,0&gt; &lt;z1,1&gt; &lt;z1,2&gt; ... &lt;z1,N&gt;
+             :      :      :      :   ...    :
+     
+</pre>
+   <p>which is then converted into triplets:
+<pre class="example">           &lt;x0&gt; &lt;y0&gt; &lt;z0,0&gt;
+           &lt;x0&gt; &lt;y1&gt; &lt;z0,1&gt;
+           &lt;x0&gt; &lt;y2&gt; &lt;z0,2&gt;
+            :    :     :
+           &lt;x0&gt; &lt;yN&gt; &lt;z0,N&gt;
+     
+</pre>
+   <pre class="example">           &lt;x1&gt; &lt;y0&gt; &lt;z1,0&gt;
+           &lt;x1&gt; &lt;y1&gt; &lt;z1,1&gt;
+            :    :     :
+     
+</pre>
+   <p>These triplets are then converted into `gnuplot` iso-curves and then
+`gnuplot` proceeds in the usual manner to do the rest of the plotting.
+
+   <p>A collection of matrix and vector manipulation routines (in C) is provided
+in `binary.c`.  The routine to write binary data is
+
+<pre class="example">           int fwrite_matrix(file,m,nrl,nrl,ncl,nch,row_title,column_title)
+     
+</pre>
+   <p>An example of using these routines is provided in the file `bf_test.c`, which
+generates binary files for the demo file `demo/binary.dem`.
+
+   <p>Usage in `plot`:
+<pre class="example">         plot `a.dat` matrix
+         plot `a.dat` matrix using 1:3
+         plot 'a.gpbin' {matrix} binary using 1:3
+</pre>
+   <p>will plot rows of the matrix, while using 2:3 will plot matrix columns, and
+using 1:2 the point coordinates (rather useless). Applying the <a href="every.html#every">every</a> option
+you can specify explicit rows and columns.
+
+   <p>Example &ndash; rescale axes of a matrix in an ascii file:
+<pre class="example">         splot `a.dat` matrix using (1+$1):(1+$2*10):3
+     
+</pre>
+   <p>Example &ndash; plot the 3rd row of a matrix in an ascii file:
+<pre class="example">         plot 'a.dat' matrix using 1:3 every 1:999:1:2
+</pre>
+   <p>(rows are enumerated from 0, thus 2 instead of 3).
+
+   <p>Gnuplot can read matrix binary files by use of the option <a href="binary.html#binary">binary</a> appearing
+without keyword qualifications unique to general binary, i.e., <a href="array.html#array">array</a>,
+<a href="record.html#record">record</a>, `format`, or <a href="filetype.html#filetype">filetype</a>.  Other general binary keywords for
+translation should also apply to matrix binary.  (See <a href="general.html#general">general</a> for
+more details.)
+
+   </body></html>
+

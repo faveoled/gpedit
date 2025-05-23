@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+<title>position - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="pm3d.html#pm3d" title="pm3d">
+<link rel="prev" href="algorithm.html#algorithm" title="algorithm">
+<link rel="next" href="scanorder.html#scanorder" title="scanorder">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="position"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="scanorder.html#scanorder">scanorder</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="algorithm.html#algorithm">algorithm</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="pm3d.html#pm3d">pm3d</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.53.2 position</h5>
+
+<!-- ?pm3d position -->
+<p>Color surface can be drawn at the base or top (then it is a gray/color planar
+map) or at z-coordinates of surface points (gray/color surface).  This is
+defined by the `at` option with a string of up to 6 combinations of `b`, `t`
+and `s`. For instance, `at b` plots at bottom only, `at st` plots firstly
+surface and then top map, while `at bstbst` will never by seriously used.
+
+   <p>Colored quadrangles are plotted one after another.  When plotting surfaces
+(`at s`), the later quadrangles overlap (overdraw) the previous ones. 
+(Gnuplot is not virtual reality tool to calculate intersections of filled
+polygon meshes.)  You may try to switch between `scansforward` and
+`scansbackward` to force the first scan of the data to be plotted first or
+last.  The default is `scansautomatic` where gnuplot makes a guess about scans
+order.  On the other hand, the `depthorder` option completely reorders the
+quadrangles. The rendering is performed after a depth sorting, which allows to
+visualize even complicated surfaces; see `pm3d depthorder` for more details.
+
+   </body></html>
+

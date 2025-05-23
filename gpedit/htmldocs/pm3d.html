@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+<title>pm3d - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="set_002dshow.html#set_002dshow" title="set-show">
+<link rel="prev" href="plot_005f.html#plot_005f" title="plot_">
+<link rel="next" href="palette.html#palette" title="palette">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="pm3d"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="palette.html#palette">palette</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="plot_005f.html#plot_005f">plot_</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="set_002dshow.html#set_002dshow">set-show</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.25.53 pm3d</h4>
+
+<!-- ?commands set pm3d -->
+<!-- ?commands show pm3d -->
+<!-- ?set pm3d -->
+<!-- ?show pm3d -->
+<p><a name="index-pm3d-556"></a><a name="index-pm3d-557"></a>
+
+   <p>pm3d is an `splot` style for drawing palette-mapped 3d and 4d data as
+color/gray maps and surfaces.  It uses an algorithm that allows plotting
+gridded as well as non-gridded data without preprocessing, even when the data
+scans do not have the same number of points.
+
+   <p>Syntax (the options can be given in any order):
+<pre class="example">           set pm3d {
+                      { at &lt;position&gt; }
+                      { interpolate &lt;steps/points in scan, between scans&gt; }
+                      { scansautomatic | scansforward | scansbackward | depthorder }
+                      { flush { begin | center | end } }
+                      { ftriangles | noftriangles }
+                      { clip1in | clip4in }
+                      { corners2color { mean|geomean|median|min|max|c1|c2|c3|c4 } }
+                      { hidden3d {&lt;linestyle&gt;} | nohidden3d }
+                      { implicit | explicit }
+                      { map }
+                    }
+           show pm3d
+           unset pm3d
+     
+</pre>
+   <p>A pm3d color surface is drawn if the splot command specifies <a href="pm3d.html#pm3d">pm3d</a>,
+if the data or function <a href="style.html#style">style</a> is set to pm3d globally, or if the pm3d mode is
+`set pm3d implicit`.  In the latter two cases, the pm3d surface is draw in
+addition to the mesh produced by the style specified in the plot command. E.g.
+<pre class="example">           splot 'fred.dat' with lines, 'lola.dat' with lines
+</pre>
+   <p>would draw both a mesh of lines and a pm3d surface for each data set. 
+If the option `explicit` is on (or `implicit` is off) only plots specified
+by the <a href="pm3d.html#pm3d">pm3d</a> attribute are plotted with a pm3d surface, e.g.:
+<pre class="example">           splot 'fred.dat' with lines, 'lola.dat' with pm3d
+</pre>
+   <p>would plot 'fred.dat' with lines (only) and 'lola.dat' with a pm3d surface.
+
+   <p>On gnuplot start-up, the mode is `explicit`. For historical and compatibility
+reasons, the commands `set pm3d;` (i.e. no options) and `set pm3d at X ...`
+(i.e.  `at` is the first option) change the mode to `implicit`. 
+The command `set pm3d;` sets other options to their default state.
+
+   <p>If you set the default data or function style to <a href="pm3d.html#pm3d">pm3d</a>, e.g.:
+<pre class="example">           set style data pm3d
+</pre>
+   <p>then the options `implicit` and `explicit` have no effect.
+
+   <p>Note that when plotting several plots, they are plotted in the order given
+on the command line. This can be of interest especially for filled surfaces
+which can overwrite and therefore hide part of earlier plots.
+
+   <p>The pm3d coloring can be drawn at any or all of three different positions,
+`top`, `bottom`, or <a href="surface.html#surface">surface</a>. See <a href="position.html#position">position</a>. 
+The following command draws three color surfaces at different altitudes:
+<pre class="example">           set border 4095
+           set pm3d at s
+           splot 10*x with pm3d at b, x*x-y*y, x*x+y*y with pm3d at t
+     
+</pre>
+   <p>See also help for <a href="palette.html#palette">palette</a>, <a href="cbrange.html#cbrange">cbrange</a>, `set colorbox`,
+and definitely the demo file `demo/pm3d.dem`.
+
+<ul class="menu">
+<li><a accesskey="1" href="algorithm.html#algorithm">algorithm</a>
+<li><a accesskey="2" href="position.html#position">position</a>
+<li><a accesskey="3" href="scanorder.html#scanorder">scanorder</a>
+<li><a accesskey="4" href="clipping.html#clipping">clipping</a>
+<li><a accesskey="5" href="color_005fassignment.html#color_005fassignment">color_assignment</a>
+<li><a accesskey="6" href="hidden3d_005f.html#hidden3d_005f">hidden3d_</a>
+<li><a accesskey="7" href="interpolate.html#interpolate">interpolate</a>
+<li><a accesskey="8" href="deprecated_005foptions.html#deprecated_005foptions">deprecated_options</a>
+</ul>
+
+   </body></html>
+

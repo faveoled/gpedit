@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+<title>New_syntax - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="New_005ffeatures.html#New_005ffeatures" title="New_features">
+<link rel="prev" href="New_005ffeatures.html#New_005ffeatures" title="New_features">
+<link rel="next" href="Local_005fcustomization_005fof_005flinetypes.html#Local_005fcustomization_005fof_005flinetypes" title="Local_customization_of_linetypes">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="New_syntax"></a>
+<a name="New_005fsyntax"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Local_005fcustomization_005fof_005flinetypes.html#Local_005fcustomization_005fof_005flinetypes">Local_customization_of_linetypes</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="New_005ffeatures.html#New_005ffeatures">New_features</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="New_005ffeatures.html#New_005ffeatures">New_features</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.4.1 New syntax</h4>
+
+<p>This version of gnuplot introduces command iteration and block-structured
+if/else/while/do constructs.  See `if`, `while`, and `do`. 
+Simple iteration is possible inside `plot` or `set` commands. 
+See <a href="iteration.html#iteration">iteration</a>.  General iteration spanning multiple
+commands is possible using a block construct as shown below. 
+For a related new feature, see the `summation` expression type. 
+Here is an example using several of these new syntax features:
+<pre class="example">           set multiplot layout 2,2
+           fourier(k, x) = sin(3./2*k)/k * 2./3*cos(k*x)
+           do for [power = 0:3] {
+               TERMS = 10**power
+               set title sprintf("%g term Fourier series",TERMS)
+               plot 0.5 + sum [k=1:TERMS] fourier(k,x) notitle
+           }
+           unset multiplot
+     
+</pre>
+   <p>It is now possible to select a column of data from a data file by
+matching a label in the first row of the file. See <a href="columnhead.html#columnhead">columnhead</a>. 
+For example
+<pre class="example">           plot for [crop in "Oats Peas Beans"] 'data' using "Year":crop
+     
+</pre>
+   </body></html>
+

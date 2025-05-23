@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>filetype - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="binary.html#binary" title="binary">
+<link rel="prev" href="endian.html#endian" title="endian">
+<link rel="next" href="keywords.html#keywords" title="keywords">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="filetype"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="keywords.html#keywords">keywords</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="endian.html#endian">endian</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="binary.html#binary">binary</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.2.7 filetype</h5>
+
+<!-- ?binary filetype -->
+<p><a name="index-filetype-340"></a>
+For some standard binary file formats gnuplot can extract all the necessary
+information from the file in question.  As an example, "format=edf" will read
+ESRF Header File format files.  For a list of the currently supported file
+formats, type `show datafile binary filetypes`.
+
+   <p>There is a special file type called `auto` for which gnuplot will check if the
+binary file's extension is a quasi-standard extension for a supported format.
+
+   <p>Command line keywords may be used to override settings extracted from the file. 
+The settings from the file override any defaults.  (See <a href="binary.html#binary">binary</a>
+for details.)
+
+<p class="noindent">&mdash; AVS &mdash;
+
+<!-- ?binary filetype avs -->
+<!-- ?filetype avs -->
+   <p><a name="index-avs-341"></a>
+`avs` is one of the automatically recognized binary file types for images. 
+AVS is an extremely simple format, suitable mostly for streaming between
+applications. It consists of 2 longs (xwidth, ywidth) followed by a stream
+of pixels, each with four bytes of information alpha/red/green/blue.
+
+<p class="noindent">&mdash; EDF &mdash;
+
+<!-- ?binary filetype edf -->
+<!-- ?filetype edf -->
+   <p><a name="index-edf-342"></a>
+<!-- ?filetype ehf -->
+<a name="index-ehf-343"></a>
+`edf` is one of the automatically recognized binary file types for images. 
+EDF stands for ESRF Data Format, and it supports both edf and ehf formats
+(the latter means ESRF Header Format).  More information on specifications
+can be found at
+
+<pre class="example">       http://www.edfplus.info/specs
+     
+</pre>
+   <p class="noindent">&mdash; PNG &mdash;
+
+<!-- ?binary filetype png -->
+<!-- ?binary filetype gif -->
+<!-- ?binary filetype jpeg -->
+<!-- ?filetype png -->
+<!-- ?filetype gif -->
+<!-- ?filetype jpeg -->
+   <p>If gnuplot was configured to use the libgd library for png/gif/jpeg output,
+then it can also be used to read these same image types as binary files. 
+You can use an explicit command
+<pre class="example">           plot 'file.png' binary filetype=png
+</pre>
+   <p>Or the file type will be recognized automatically from the extension if you
+have previously requested
+<pre class="example">           set datafile binary filetype=auto
+     
+</pre>
+   </body></html>
+

@@ -1,0 +1,44 @@
+<RCC>
+  <qresource prefix="misc">
+    <file>palette_rainbow.png</file>
+    <file>palette_bgyr.png</file>
+    <file>palette_black_red.png</file>
+    <file>palette_bty.png</file>
+    <file>palette_bwr.png</file>
+    <file>palette_cgp.png</file>
+    <file>palette_default.png</file>
+    <file>palette_default_wb.png</file>
+    <file>palette_f2d.png</file>
+    <file>palette_gli.png</file>
+    <file>palette_gp.png</file>
+    <file>palette_gray.png</file>
+    <file>palette_hot.png</file>
+    <file>palette_mlin.png</file>
+    <file>palette_mlog.png</file>
+  </qresource>
+  <qresource prefix="icons">
+    <file>icons/document-print.png</file>
+    <file>icons/edit-find.png</file>
+    <file>icons/application-exit.png</file>
+    <file>icons/pick_position.png</file>
+    <file>icons/insert-text.png</file>
+    <file>icons/run_image.png</file>
+    <file>icons/run_preview.png</file>
+    <file>icons/preferences-desktop-color.png</file>
+    <file>icons/ignore.png</file>
+    <file>icons/unignore.png</file>
+    <file>icons/uncomment.png</file>
+    <file>icons/comment.png</file>
+    <file>icons/document-new.png</file>
+    <file>icons/document-open.png</file>
+    <file>icons/document-save-as.png</file>
+    <file>icons/document-save.png</file>
+    <file>icons/edit-copy.png</file>
+    <file>icons/edit-cut.png</file>
+    <file>icons/edit-paste.png</file>
+    <file>icons/edit-redo.png</file>
+    <file>icons/edit-undo.png</file>
+    <file>icons/GnuplotEditor.png</file>
+    <file>icons/GnuplotEditor_logo.svg</file>
+  </qresource>
+</RCC>

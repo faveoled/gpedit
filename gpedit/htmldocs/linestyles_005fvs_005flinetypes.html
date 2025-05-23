@@ -1,0 +1,56 @@
+<html lang="en">
+<head>
+<title>linestyles_vs_linetypes - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="linetypes.html#linetypes" title="linetypes">
+<link rel="prev" href="colorspec.html#colorspec" title="colorspec">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="linestyles_vs_linetypes"></a>
+<a name="linestyles_005fvs_005flinetypes"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="colorspec.html#colorspec">colorspec</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="linetypes.html#linetypes">linetypes</a>
+<hr>
+</div>
+
+<h4 class="subsection">1.17.2 linestyles vs linetypes</h4>
+
+<!-- ? linestyles vs linetypes -->
+<p>Lines can have additional properties such as linewidth.  You can associate
+these various properties, as well as equivalent properties for point symbols,
+into user-defined "linestyles" using the command `set style line`.  Once
+you have defined a linestyle, you can use it in a plot command to control
+the appearance of one or more plot elements.
+
+   <p>Whereas `linetypes` are permanent (they last until you explicitly redefine
+them), `linestyles` are temporary.  They only last until the next reset
+of the graphics state.
+
+   <p>Examples:
+
+<pre class="example">          # define a new line style with terminal-independent color cyan,
+          # linewidth 3, and associated point type 6 (a circle with a dot in it).
+          set style line 5 lt rgb "cyan" lw 3 pt 6
+          plot sin(x) with linespoints ls 5          # user-defined line style 5
+     
+</pre>
+   </body></html>
+

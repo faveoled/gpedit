@@ -1,0 +1,5 @@
+recursive-include designer *.ui *.png *.gp *.qrc
+include compile_gui.sh
+include MANIFEST.in
+include gpedit/htmldocs/*.html
+include pyuic

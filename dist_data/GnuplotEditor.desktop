@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Gnuplot Editor
+Comment=Interactive text editor for Gnuplot scripts
+Terminal=false
+Icon=/usr/share/icons/gnome/128x128/apps/GnuplotEditor_128x128.png
+Type=Application
+Exec=/usr/local/bin/gped %f
+Categories=WX;Science;
+X-KDE-StartupNotify=true
+MimeType=application/x-gnuplot;

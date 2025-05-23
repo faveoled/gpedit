@@ -1,0 +1,154 @@
+<html lang="en">
+<head>
+<title>keywords - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="binary.html#binary" title="binary">
+<link rel="prev" href="filetype.html#filetype" title="filetype">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="keywords"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="filetype.html#filetype">filetype</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="binary.html#binary">binary</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.2.8 keywords</h5>
+
+<!-- ?binary keywords -->
+<p>The following keywords apply only when generating coordinates from binary
+data files.  That is, the control mapping the individual elements of a binary
+array, matrix, or image to specific x/y/z positions.
+
+<p class="noindent">&mdash; SCAN &mdash;
+
+<!-- ?binary keywords scan -->
+   <p>A great deal of confusion can arise concerning the relationship between how
+gnuplot scans a binary file and the dimensions seen on the plot.  To lessen
+the confusion, conceptually think of gnuplot _always_ scanning the binary file
+point/line/plane or fast/medium/slow.  Then this keyword is used to tell
+gnuplot how to map this scanning convention to the Cartesian convention shown
+in plots, i.e., x/y/z.  The qualifier for scan is a two or three letter code
+representing where point is assigned (first letter), line is assigned (second
+letter), and plane is assigned (third letter).  For example, `scan=yx` means
+the fastest, point-by-point, increment should be mapped along the Cartesian
+y dimension and the middle, line-by-line, increment should be mapped along the
+x dimension.
+
+   <p>When the plotting mode is `plot`, the qualifier code can include the two
+letters x and y.  For `splot`, it can include the three letters x, y and z.
+
+   <p>There is nothing restricting the inherent mapping from point/line/plane to
+apply only to Cartesian coordinates.  For this reason there are cylindrical
+coordinate synonyms for the qualifier codes where t (theta), r and z are
+analogous to the x, y and z of Cartesian coordinates.
+
+<p class="noindent">&mdash; TRANSPOSE &mdash;
+
+<!-- ?binary keywords transpose -->
+   <p>Shorthand notation for `scan=yx` or `scan=yxz`.
+
+<p class="noindent">&mdash; DX, DY, DZ &mdash;
+
+<!-- ?binary keywords dx -->
+<!-- ?binary keywords dy -->
+   <p><a name="index-dx-344"></a>
+<a name="index-dy-345"></a>
+When gnuplot generates coordinates, it uses the spacing described by these
+keywords.  For example `dx=10 dy=20` would mean space samples along the
+x dimension by 10 and space samples along the y dimension by 20.  `dy` cannot
+appear if `dx` does not appear.  Similarly, `dz` cannot appear if `dy` does not
+appear.  If the underlying dimensions are greater than the keywords specified,
+the spacing of the highest dimension given is extended to the other dimensions. 
+For example, if an image is being read from a file and only `dx=3.5` is given
+gnuplot uses a delta x and delta y of 3.5.
+
+   <p>The following keywords also apply only when generating coordinates.  However
+they may also be used with matrix binary files.
+
+<p class="noindent">&mdash; FLIPX, FLIPY, FLIPZ &mdash;
+
+<!-- ?binary keywords flipx -->
+   <p>Sometimes the scanning directions in a binary datafile are not consistent with
+that assumed by gnuplot.  These keywords can flip the scanning direction along
+dimensions x, y, z.
+
+<p class="noindent">&mdash; ORIGIN  &mdash;
+
+<!-- ?binary keywords origin -->
+   <p>When gnuplot generates coordinates based upon transposition and flip, it
+attempts to always position the lower left point in the array at the origin,
+i.e., the data lies in the first quadrant of a Cartesian system after transpose
+and flip.
+
+   <p>To position the array somewhere else on the graph, the <a href="origin.html#origin">origin</a> keyword directs
+gnuplot to position the lower left point of the array at a point specified by a
+tuple.  The tuple should be a double for `plot` and a triple for `splot`. 
+For example, `origin=(100,100):(100,200)` is for two records in the file and
+intended for plotting in two dimensions. A second example, `origin=(0,0,3.5)`,
+is for plotting in three dimensions.
+
+<p class="noindent">&mdash; CENTER &mdash;
+
+<!-- ?binary keywords center -->
+<!-- ?keywords center -->
+   <p>Similar to <a href="origin.html#origin">origin</a>, this keyword will position the array such that its center
+lies at the point given by the tuple.  For example, `center=(0,0)`.  Center
+does not apply when the size of the array is `Inf`.
+
+<p class="noindent">&mdash; ROTATE &mdash;
+
+<!-- ?binary keywords rotate -->
+<!-- ?keywords rotate -->
+   <p>The transpose and flip commands provide some flexibility in generating and
+orienting coordinates.  However, for full degrees of freedom, it is possible to
+apply a rotational vector described by a rotational angle in two dimensions.
+
+   <p>The `rotate` keyword applies to the two-dimensional plane, whether it be `plot`
+or `splot`.  The rotation is done with respect to the positive angle of the
+Cartesian plane.
+
+   <p>The angle can be expressed in radians, radians as a multiple of pi, or degrees. 
+For example, `rotate=1.5708`, `rotate=0.5pi` and `rotate=90deg` are equivalent.
+
+   <p>If <a href="origin.html#origin">origin</a> is specified, the rotation is done about the lower left sample
+point before translation.  Otherwise, the rotation is done about the array
+`center`.
+
+<p class="noindent">&mdash; PERPENDICULAR &mdash;
+
+<!-- ?binary keywords perpendicular -->
+   <p>For `splot`, the concept of a rotational vector is implemented by a triple
+representing the vector to be oriented normal to the two-dimensional x-y plane. 
+Naturally, the default is (0,0,1).  Thus specifying both rotate and
+perpendicular together can orient data myriad ways in three-space.
+
+   <p>The two-dimensional rotation is done first, followed by the three-dimensional
+rotation.  That is, if R' is the rotational 2 x 2 matrix described by an angle,
+and P is the 3 x 3 matrix projecting (0,0,1) to (xp,yp,zp), let R be
+constructed from R' at the upper left sub-matrix, 1 at element 3,3 and zeros
+elsewhere.  Then the matrix formula for translating data is v' = P R v, where v
+is the 3 x 1 vector of data extracted from the data file.  In cases where the
+data of the file is inherently not three-dimensional, logical rules are used to
+place the data in three-space.  (E.g., usually setting the z-dimension value to
+zero and placing 2D data in the x-y plane.)
+
+   </body></html>
+

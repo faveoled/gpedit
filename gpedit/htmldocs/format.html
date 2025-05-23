@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+<title>format - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="binary.html#binary" title="binary">
+<link rel="prev" href="skip.html#skip" title="skip">
+<link rel="next" href="endian.html#endian" title="endian">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="format"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="endian.html#endian">endian</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="skip.html#skip">skip</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="binary.html#binary">binary</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.15.2.5 format</h5>
+
+<!-- ?binary format -->
+<p>The default binary format is a float.  For more flexibility, the format can
+include details about variable sizes.  For example, `format="%uchar%int%float"`
+associates an unsigned character with the first using column, an int with the
+second column and a float with the third column.  If the number of size
+specifications is less than the greatest column number, the size is implicitly
+taken to be similar to the last given variable size.
+
+   <p>Furthermore, similar to the <a href="using.html#using">using</a> specification, the format can include
+discarded columns via the `*` character and have implicit repetition via a
+numerical repeat-field.  For example, `format="%*2int%3float"` causes gnuplot
+to discard two ints before reading three floats.  To list variable sizes, type
+`show datafile binary datasizes`.  There are a group of names that are machine
+dependent along with their sizes in bytes for the particular compilation. 
+There is also a group of names which attempt to be machine independent.
+
+   </body></html>
+

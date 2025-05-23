@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<title>Command-line-editing - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="gnuplot.html#gnuplot" title="gnuplot">
+<link rel="prev" href="Canvas_005fsize.html#Canvas_005fsize" title="Canvas_size">
+<link rel="next" href="Comments.html#Comments" title="Comments">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Command-line-editing"></a>
+<a name="Command_002dline_002dediting"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Comments.html#Comments">Comments</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Canvas_005fsize.html#Canvas_005fsize">Canvas_size</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="gnuplot.html#gnuplot">gnuplot</a>
+<hr>
+</div>
+
+<h3 class="section">1.8 Command-line-editing</h3>
+
+<p><a name="index-line_002dediting-17"></a>
+<a name="index-editing-18"></a>
+<a name="index-command_002dline_002dediting-19"></a>
+Command-line editing and command history are supported using either an
+external gnu readline library, an external BSD libedit library,  or a
+built-in equivalent.  This choice is a configuration option at the time
+gnuplot is built.
+
+   <p>The editing commands of the built-in version are given below. Please note that
+the action of the DEL key is system-dependent. The gnu readline and BSD libedit
+libraries have their own documentation.
+
+<pre class="example">           `Line-editing`:
+     
+</pre>
+   <pre class="example">           ^B    moves back a single character.
+           ^F    moves forward a single character.
+           ^A    moves to the beginning of the line.
+           ^E    moves to the end of the line.
+           ^H    deletes the previous character.
+           DEL   deletes the current character.
+           ^D    deletes current character, sends EOF if the line is empty.
+           ^K    deletes from current position to the end of line.
+           ^L,^R redraws line in case it gets trashed.
+           ^U    deletes the entire line.
+           ^W    deletes previous word.
+     
+</pre>
+   <pre class="example">           `History`:
+     
+</pre>
+   <pre class="example">           ^P    moves back through history.
+           ^N    moves forward through history.
+     
+</pre>
+   <!-- ^<table align="center" border="1" rules="groups" frame="hsides" cellpadding="3"> -->
+<!-- ^<colgroup> -->
+<!-- ^  <col align="center"> -->
+<!-- ^  <col align="left"> -->
+<!-- ^</colgroup> -->
+<!-- ^<thead> -->
+<!-- ^<tr>    <th>Character</th>    <th>Function</th></tr> -->
+<!-- ^</thead> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <td></td>                <th>Line Editing</th></tr> -->
+<!-- ^<tr>    <td><tt>^B</tt></td>    <td>move back a single character.</td></tr> -->
+<!-- ^<tr>    <td><tt>^F</tt></td>    <td>move forward a single character.</td></tr> -->
+<!-- ^<tr>    <td><tt>^A</tt></td>    <td>move to the beginning of the line.</td></tr> -->
+<!-- ^<tr>    <td><tt>^E</tt></td>    <td>move to the end of the line.</td></tr> -->
+<!-- ^<tr>    <td><tt>^H</tt></td>    <td>delete the previous character.</td></tr> -->
+<!-- ^<tr>    <td><tt>DEL</tt></td>    <td>delete the current character.</td></tr> -->
+<!-- ^<tr>    <td><tt>^D</tt></td>    <td>delete current character. EOF if line is empty</td></tr> -->
+<!-- ^<tr>    <td><tt>^K</tt></td>    <td>delete from current position to the end of line.</td></tr> -->
+<!-- ^<tr>    <td><tt>^L, ^R</tt></td>    <td>redraw line in case it gets trashed.</td></tr> -->
+<!-- ^<tr>    <td><tt>^U</tt></td>    <td>delete the entire line.</td></tr> -->
+<!-- ^<tr>    <td><tt>^W</tt></td>    <td>delete previous word.</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^<tbody> -->
+<!-- ^<tr>    <th></th>                <th>History</th></tr> -->
+<!-- ^<tr>    <td><tt>^P</tt></td>    <td>move back through history.</td></tr> -->
+<!-- ^<tr>    <td><tt>^N</tt></td>    <td>move forward through history.</td></tr> -->
+<!-- ^</tbody> -->
+<!-- ^</table> -->
+   </body></html>
+

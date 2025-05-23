@@ -1,0 +1,56 @@
+<html lang="en">
+<head>
+<title>cubehelix - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="palette.html#palette" title="palette">
+<link rel="prev" href="functions_005f_005f.html#functions_005f_005f" title="functions__">
+<link rel="next" href="file.html#file" title="file">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="cubehelix"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="file.html#file">file</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="functions_005f_005f.html#functions_005f_005f">functions__</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="palette.html#palette">palette</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.54.4 cubehelix</h5>
+
+<!-- ?commands set palette cubehelix -->
+<!-- ?set palette cubehelix -->
+<p><a name="index-cubehelix-574"></a>
+The "cubehelix" option defines a family of palettes in which color (hue) varies
+along the standard color wheel while at the same time the net intensity
+increases monotonically as the gray value goes from 0 to 1.
+<pre class="example">           D A Green (2011) http://arxiv.org/abs/1108.5083
+</pre>
+   <p>`start` defines the starting point along the color wheel in radians. 
+`cycles` defines how many color wheel cycles span the palette range. 
+Larger values of `saturation` produce more saturated color; saturation &gt; 1
+may lead to clipping of the individual RGB components and to intensity
+becoming non-monotonic. The palette is also affected by `set palette gamma`. 
+The default values are
+<pre class="example">           set palette cubehelix start 0.5 cycles -1.5 saturation 1
+           set palette gamma 1.5
+     
+</pre>
+   </body></html>
+

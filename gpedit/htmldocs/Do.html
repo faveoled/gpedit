@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+<title>Do - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Commands.html#Commands" title="Commands">
+<link rel="prev" href="clear.html#clear" title="clear">
+<link rel="next" href="evaluate.html#evaluate" title="evaluate">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Do"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="evaluate.html#evaluate">evaluate</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="clear.html#clear">clear</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Commands.html#Commands">Commands</a>
+<hr>
+</div>
+
+<h3 class="section">3.4 Do</h3>
+
+<!-- ?commands do -->
+<p><a name="index-do-302"></a>
+Syntax:
+<pre class="example">           do for &lt;iteration-spec&gt; {
+                &lt;commands&gt;
+                &lt;commands&gt;
+           }
+</pre>
+   <p>Execute a sequence of commands multiple times.  The commands must be enclosed
+in curly brackets, and the opening "{" must be on the same line as the `do`
+keyword.  This command cannot be used with old-style (un-bracketed) if/else
+statements.  See `if`.  For examples of iteration specifiers, see <a href="iteration.html#iteration">iteration</a>. 
+Example:
+<pre class="example">           set multiplot layout 2,2
+           do for [name in "A B C D"] {
+               filename = name . ".dat"
+               set title sprintf("Condition %s",name)
+               plot filename title name
+           }
+           unset multiplot
+     
+</pre>
+   </body></html>
+

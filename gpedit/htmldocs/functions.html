@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+<title>functions - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="plot.html#plot" title="plot">
+<link rel="prev" href="errorlines.html#errorlines" title="errorlines">
+<link rel="next" href="parametric.html#parametric" title="parametric">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="functions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="parametric.html#parametric">parametric</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="errorlines.html#errorlines">errorlines</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="plot.html#plot">plot</a>
+<hr>
+</div>
+
+<h4 class="subsection">3.15.6 functions</h4>
+
+<!-- ?commands plot functions -->
+<!-- ?plot functions -->
+<p><a name="index-functions-379"></a><a name="index-functions-380"></a>
+
+   <p>Built-in or user-defined functions can be displayed by the `plot` and `splot`
+commands in addition to, or instead of, data read from a file. The requested
+function is evaluated by sampling at regular intervals spanning the independent
+axis range[s]. See <a href="samples.html#samples">samples</a> and <a href="isosamples.html#isosamples">isosamples</a>. 
+Example:
+<pre class="example">           approx(ang) = ang - ang**3 / (3*2)
+           plot sin(x) title "sin(x)", approx(x) title "approximation"
+     
+</pre>
+   <p>To set a default plot style for functions, see `set style function`. 
+For information on built-in functions, see <a href="functions.html#functions">functions</a>. 
+For information on defining your own functions, see `user-defined`.
+
+   </body></html>
+

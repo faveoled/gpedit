@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>mouseformat - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="mouse.html#mouse" title="mouse">
+<link rel="prev" href="doubleclick.html#doubleclick" title="doubleclick">
+<link rel="next" href="scrolling.html#scrolling" title="scrolling">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="mouseformat"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="scrolling.html#scrolling">scrolling</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="doubleclick.html#doubleclick">doubleclick</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="mouse.html#mouse">mouse</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">3.25.40.2 mouseformat</h5>
+
+<!-- ?set mouse format -->
+<!-- ?set mouse mouseformat -->
+<!-- ?mouse format -->
+<p><a name="index-mouseformat-517"></a>
+The `set mouse format` command specifies a format string for sprintf() which
+determines how the mouse cursor [x,y] coordinates are printed to the plot
+window and to the clipboard.  The default is "% #g".
+
+   <p>`set mouse clipboardformat` and <a href="mouseformat.html#mouseformat">mouseformat</a> are used for formatting
+the text on Button1 and Button2 actions &ndash; copying the coordinates to the
+clipboard and temporarily annotating the mouse position.  An integer argument
+selects one of the format options in the table below. A string argument is used
+as a format for sprintf() in option 6 and should contain two float specifiers. 
+Example:
+<pre class="example">          `set mouse mouseformat "mouse x,y = %5.2g, %10.3f"`.
+</pre>
+   <p>Use `set mouse mouseformat ""` to turn this string off again.
+
+   <p>The following formats are available:
+
+<pre class="example">      0   default (same as 1)
+      1   axis coordinates                    1.23, 2.45
+      2   graph coordinates (from 0 to 1)    /0.00, 1.00/
+      3   x = timefmt     y = axis           [(as set by <a href="timefmt.html#timefmt">timefmt</a>), 2.45]
+      4   x = date        y = axis           [31. 12. 1999, 2.45]
+      5   x = time        y = axis           [23:59, 2.45]
+      6   x = date time   y = axis           [31. 12. 1999 23:59, 2.45]
+      7   format from <a href="mouseformat.html#mouseformat">mouseformat</a>, e.g. "mouse x,y = 1.23,     2.450"
+     
+</pre>
+   </body></html>
+

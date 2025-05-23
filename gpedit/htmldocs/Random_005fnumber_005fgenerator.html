@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+<title>Random_number_generator - Gnuplot: An Interactive Plotting Program</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gnuplot: An Interactive Plotting Program">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Functions.html#Functions" title="Functions">
+<link rel="prev" href="elliptic_005fintegrals.html#elliptic_005fintegrals" title="elliptic_integrals">
+<link rel="next" href="value.html#value" title="value">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Random_number_generator"></a>
+<a name="Random_005fnumber_005fgenerator"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="value.html#value">value</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="elliptic_005fintegrals.html#elliptic_005fintegrals">elliptic_integrals</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Functions.html#Functions">Functions</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">1.14.1.74 Random number generator</h5>
+
+<!-- ?expressions random -->
+<p><a name="index-random-174"></a>
+<a name="index-rand-175"></a><a name="index-rand-176"></a>
+
+   <p>The function `rand()` produces a sequence of pseudo-random numbers between
+0 and 1 using an algorithm from P. L'Ecuyer and S. Cote, "Implementing a
+random number package with splitting facilities", ACM Transactions on
+Mathematical Software, 17:98-111 (1991).
+
+<pre class="example">           rand(0)     returns a pseudo random number in the interval [0:1]
+                       generated from the current value of two internal
+                       32-bit seeds.
+           rand(-1)    resets both seeds to a standard value.
+           rand(x)     for integer 0 &lt; x &lt; 2^31-1 sets both internal seeds
+                       to x.
+           rand({x,y}) for integer 0 &lt; x,y &lt; 2^31-1 sets seed1 to x and
+                       seed2 to y.
+     
+</pre>
+   </body></html>
+
