@@ -5,7 +5,7 @@ This is needed in oder not to block the editor when the script is running.
 '''
 
 import os
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT, TimeoutExpired # Added TimeoutExpired
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 from threading import Event
 import traceback
@@ -107,9 +107,40 @@ class GnuplotInterface(QThread):
   @pyqtSlot()
   def stopScript(self):
     self.shutdownScript.clear()
-    self._doShutdown=True
-    self.gp.terminate()
-    self.shutdownScript.wait()
+    self._doShutdown = True
+
+    if self.gp.poll() is None:  # Gnuplot process is still running
+        try:
+            if not self.gp.stdin.closed: # Check if stdin is already closed
+                self.gp.stdin.close()
+        except IOError:
+            # Stdin might already be closed or broken, which is fine.
+            pass
+        
+        self.gp.terminate()
+        try:
+            self.gp.wait(timeout=1.0)
+        except TimeoutExpired:
+            print("Gnuplot did not terminate in time, killing...")
+            self.gp.kill()
+            try:
+                self.gp.wait(timeout=0.5)
+            except TimeoutExpired:
+                print("Gnuplot did not die after kill. Process may be orphaned.")
+            except Exception as e: # pylint: disable=broad-except
+                # Handle cases where process might have died between kill and wait
+                print(f"Exception waiting for Gnuplot to die after kill: {e}")
+        except Exception as e: # pylint: disable=broad-except
+            # Handle cases where process might have already terminated before wait
+            print(f"Exception waiting for Gnuplot to terminate: {e}")
+
+    self.script = []  # Clear any pending commands
+
+    if not self.scriptIdle.is_set(): # Check if scriptIdle is already set
+        self.scriptIdle.set()
+
+    self._doShutdown = False
+    self.shutdownScript.set()
 
   def executeLine(self):
     next_item=self.script.pop(0)
@@ -142,6 +173,11 @@ class GnuplotInterface(QThread):
                 'Gnuplot process has been terminated unexpectedly, restarting...', lno)
         self.initGnuplot()
         raise RuntimeError('Gnuplot terminated')
+      # --- Start of modification for executeLine ---
+      if self.gp.poll() is not None:
+        outstr = b''
+        break
+      # --- End of modification for executeLine ---
       next_byte=self.gp.stdout.read(1)
       outstr+=next_byte
     outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
@@ -173,6 +209,11 @@ class GnuplotInterface(QThread):
                 'Gnuplot process has been terminated unexpectedly, restarting...',-1)
         self.initGnuplot()
         raise RuntimeError('Gnuplot terminated')
+      # --- Start of modification for _pickPosition ---
+      if self.gp.poll() is not None:
+        outstr = b''
+        break
+      # --- End of modification for _pickPosition ---
       next_byte=self.gp.stdout.read(1)
       outstr+=next_byte
     outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
