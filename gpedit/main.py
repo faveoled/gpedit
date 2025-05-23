@@ -681,7 +681,7 @@ class MainWindow(QMainWindow):
   def changeFilelistFilters(self):
     ffilters=str(self.ui.filterEntry.text())
     self.ui.filenameList.changeFilters(list(map(str.strip, ffilters.split(';'))))
-    cfg.set('gui', 'data file filters', ';'.join(self.ui.filenameList.filters).encode('utf8'))
+    cfg.set('gui', 'data file filters', ';'.join(self.ui.filenameList.filters))
     write_config()
 
   def openSearchDialog(self):
