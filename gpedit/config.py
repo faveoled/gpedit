@@ -18,7 +18,7 @@ CFG_PATH=os.path.join(os.path.expanduser('~'), '.gpedit')
 CFG_FILE=os.path.join(CFG_PATH, 'config.ini')
 
 
-cfg=configparser.SafeConfigParser()
+cfg=configparser.ConfigParser()
 cfg.optionxform=str # allow upper case option names
 
 def write_config():
@@ -27,7 +27,7 @@ def write_config():
 if not os.path.exists(CFG_PATH):
   os.mkdir(CFG_PATH)
 if os.path.exists(CFG_FILE):
-  cfg.readfp(open(CFG_FILE, 'r'))
+  cfg.read_file(open(CFG_FILE, 'r'))
 else:
   for key, settings in list(CFG_DEFAULTS.items()):
     cfg.add_section(key)
