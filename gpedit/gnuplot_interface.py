@@ -5,6 +5,8 @@ This is needed in oder not to block the editor when the script is running.
 '''
 
 import os
+import time
+import subprocess
 from subprocess import Popen, PIPE, STDOUT
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 from threading import Event
@@ -106,10 +108,70 @@ class GnuplotInterface(QThread):
 
   @pyqtSlot()
   def stopScript(self):
+    self.lineExecuted.emit(True, "Stopping script and Gnuplot process...", -1)
+    self._doShutdown = True # Signal executeLine/pickPosition to handle shutdown path
+
+    # Ensure the script queue is cleared early.
+    # This prevents new commands from being processed if stopScript is called mid-execution.
+    self.script = []
+
+    if self.gp and self.gp.poll() is None: # If process exists and is running
+        try:
+            self.gp.terminate()
+            # shutdownScript is set by executeLine/_pickPosition when it sees gp.poll() is not None and _doShutdown is True.
+            # We wait for that to happen.
+            if not self.shutdownScript.wait(timeout=2.0):
+                self.lineExecuted.emit(True, "Gnuplot termination attempt timed out. Forcing kill.", -1)
+                if self.gp.poll() is None: # Check again before kill
+                    self.gp.kill()
+                    try:
+                        self.gp.wait(timeout=1.0) # Wait for kill and cleanup
+                        self.lineExecuted.emit(True, "Gnuplot process killed.", -1)
+                    except subprocess.TimeoutExpired:
+                        self.lineExecuted.emit(False, "Gnuplot kill attempt timed out after forcing.", -1)
+            else:
+                # shutdownScript was set, meaning executeLine/pickPosition handled the termination gracefully.
+                self.lineExecuted.emit(True, "Gnuplot process terminated gracefully by executeLine/pickPosition.", -1)
+        except subprocess.TimeoutExpired: # This might be redundant if wait is nested
+            self.lineExecuted.emit(False, "Gnuplot kill attempt timed out.", -1)
+        except Exception as e:
+            self.lineExecuted.emit(False, f"Error during Gnuplot termination/kill: {str(e)}", -1)
+    else:
+        # Process was not running or gp object didn't exist
+        self.lineExecuted.emit(True, "Gnuplot process was not running or already stopped before stopScript action.", -1)
+        # If it wasn't running, executeLine might not have set shutdownScript.
+        # However, if _doShutdown is true, and the process is already dead,
+        # the next iteration of executeLine (if any) or pickPosition should still set it.
+        # To be safe, if we know the process is dead, we can set it here.
+        if not self.shutdownScript.is_set():
+             # This is tricky: executeLine is the owner of setting this.
+             # If executeLine is waiting on self.script, and we cleared self.script,
+             # it might proceed to self.scriptIdle.set() then self.shutdown.wait(0.1).
+             # The _doShutdown flag should be caught by executeLine's loop.
+             pass # Rely on executeLine to set it.
+
+    # Reset the event for the next cycle.
+    # This should happen *after* we are sure the previous script's shutdown sequence in executeLine is complete.
+    # The wait() above is for that.
     self.shutdownScript.clear()
-    self._doShutdown=True
-    self.gp.terminate()
-    self.shutdownScript.wait()
+
+    # _doShutdown is reset by executeLine/pickPosition when it completes its shutdown sequence.
+    # self.script is already cleared.
+
+    # Re-initialize Gnuplot.
+    # Ensure the old process is gone.
+    try:
+        if self.gp and self.gp.poll() is None:
+            self.lineExecuted.emit(False, "Gnuplot process unexpectedly still alive before re-init. Force killing again.", -1)
+            self.gp.kill()
+            self.gp.wait(timeout=0.5) # Short wait for the kill
+    except Exception as e:
+        self.lineExecuted.emit(False, f"Error during final check/kill before re-init: {str(e)}", -1)
+    finally:
+        self.gp = None # Discard old Popen object to ensure initGnuplot starts fresh
+
+    self.initGnuplot()
+    self.lineExecuted.emit(True, "Gnuplot interface has been reset.", -1)
 
   def executeLine(self):
     next_item=self.script.pop(0)
@@ -131,17 +193,22 @@ class GnuplotInterface(QThread):
     outstr=''.encode(self.encoding) # trick to get a python3 byte string
     while not outstr.endswith('====Command End===='.encode(self.encoding)):
       if self.gp.poll() is not None:
+        current_outstr = outstr.strip().decode(self.encoding, 'replace')
         if self._doShutdown:
-          self.script=[]
-          self.shutdownScript.set()
-          self._doShutdown=False
-          self.lineExecuted.emit(True, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot killed during script execution, restarting...',-1)
+          self.script = [] # Already here
+          self.shutdownScript.set() # Already here
+          self._doShutdown = False # Already here
+          self.lineExecuted.emit(True, current_outstr + '\n\n' +
+                'Gnuplot shutdown initiated by stopScript, Gnuplot process ended.', -1) # Adjusted message
           return
-        self.lineExecuted.emit(False, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot process has been terminated unexpectedly, restarting...', lno)
-        self.initGnuplot()
-        raise RuntimeError('Gnuplot terminated')
+        else: # Unexpected termination
+          self.lineExecuted.emit(False, current_outstr + '\n\n' +
+                'Gnuplot process terminated unexpectedly.', lno)
+          self.script = [] # Clear current script
+          self.scriptFinished.emit() # Signal script is over
+          # No initGnuplot() here
+          # No RuntimeError here
+          return # Exit method, allow _run loop to idle
       next_byte=self.gp.stdout.read(1)
       outstr+=next_byte
     outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
@@ -162,17 +229,22 @@ class GnuplotInterface(QThread):
     outstr=''.encode(self.encoding) # trick to get a python3 byte string
     while not outstr.endswith('====Command End===='.encode(self.encoding)):
       if self.gp.poll() is not None:
+        current_outstr = outstr.strip().decode(self.encoding, 'replace')
         if self._doShutdown:
-          self.script=[]
-          self.shutdownScript.set()
-          self._doShutdown=False
-          self.lineExecuted.emit(True, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot killed during script execution, restarting...',-1)
+          self.script = [] # Already here
+          self.shutdownScript.set() # Already here
+          self._doShutdown = False # Already here
+          self.lineExecuted.emit(True, current_outstr + '\n\n' +
+                'Gnuplot shutdown initiated by stopScript (during pick), Gnuplot process ended.', -1) # Adjusted message
           return
-        self.lineExecuted.emit(False, outstr.strip().decode(self.encoding, 'replace')+'\n\n'+
-                'Gnuplot process has been terminated unexpectedly, restarting...',-1)
-        self.initGnuplot()
-        raise RuntimeError('Gnuplot terminated')
+        else: # Unexpected termination
+          self.lineExecuted.emit(False, current_outstr + '\n\n' +
+                'Gnuplot process terminated unexpectedly (during pick).', -1)
+          self.script = [] # Clear current script
+          self.scriptFinished.emit() # Signal script is over
+          # No initGnuplot() here
+          # No RuntimeError here
+          return # Exit method, allow _run loop to idle
       next_byte=self.gp.stdout.read(1)
       outstr+=next_byte
     outstr=outstr.decode(self.encoding, 'replace').split('====Command End====')[0].strip()
