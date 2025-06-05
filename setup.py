@@ -26,7 +26,7 @@ __email__="artur.glavic@gmail.com"
 __author_email__=__email__
 __url__="http://sourceforge.net/projects/gpedit"
 __description__='''Interactive gnuplot script editor'''
-__version__='1.5'
+__version__='1.5.1'
 
 __scripts__=['gped']
 __py_modules__=[]
