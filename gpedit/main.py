@@ -642,7 +642,7 @@ class MainWindow(QMainWindow):
 
   def aboutDialog(self):
     QMessageBox.information(self, 'About Gnuplot Editor...',
-              'Gnuplot editor is writtern by\nArtur Glavic\n\nLicensed under GPL v.3')
+              'Gnuplot editor is written by\nArtur Glavic\n\nLicensed under GPL v.3')
 
   def gnuplotHelp(self):
     dia=QDialog(self)
